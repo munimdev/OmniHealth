@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "934585948649",
+    "project_id": "omni-health-32e46",
+    "storage_bucket": "omni-health-32e46.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:934585948649:android:ab2dc37dcbc8c0e1f05378",
+        "android_client_info": {
+          "package_name": "com.example.omnihealth"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "934585948649-7ilgenpdke9b4o7utnupuo29hm9qieer.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaXJfnwLjA9DZ5qNPrCH_vyJW7eEwvHi4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "934585948649-7ilgenpdke9b4o7utnupuo29hm9qieer.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "934585948649-hbn7t874t08gr8i5e63njg7qv3a3mh58.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.omnihealth"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
