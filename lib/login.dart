@@ -1,6 +1,7 @@
 import './loginuser.dart';
 import './auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Login extends StatefulWidget {
   final Function? toggleView;
@@ -128,7 +129,7 @@ class _Login extends State<Login> {
           }
         },
         child: Text(
-          "Log in",
+          "Sign in",
           style: TextStyle(color: Theme.of(context).primaryColorLight),
           textAlign: TextAlign.center,
         ),
@@ -139,7 +140,7 @@ class _Login extends State<Login> {
       padding: const EdgeInsets.only(bottom: 16.0),
       child: _isSigningIn
           ? CircularProgressIndicator(
-        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF19768F)),
       )
           : OutlinedButton(
         style: ButtonStyle(
@@ -151,9 +152,15 @@ class _Login extends State<Login> {
           ),
         ),
         onPressed: () async {
+          setState(() {
+            _isSigningIn = true;
+          });
 
           dynamic user = await _auth.signInWithGoogle(context: context);
 
+          setState(() {
+            _isSigningIn = false;
+          });
         },
         child: Padding(
           padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
@@ -161,18 +168,20 @@ class _Login extends State<Login> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Image(
-                image: AssetImage("assets/google_logo.png"),
-                height: 35.0,
+
+              SvgPicture.asset(
+              'assets/icons/google.svg',
+              height: 20.0,
+              width: 20.0,
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 10),
                 child: Text(
-                  'Sign in with Google',
+                  'Sign up with Google',
                   style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black54,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               )
@@ -184,37 +193,35 @@ class _Login extends State<Login> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: const Text('Login Demo Page'),
-        backgroundColor: Theme.of(context).primaryColor,
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Form(
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  loginAnonymousButon,
-                  const SizedBox(height: 45.0),
-                  emailField,
-                  const SizedBox(height: 25.0),
-                  passwordField,
-                  txtbutton,
-                  const SizedBox(height: 35.0),
-                  loginEmailPasswordButon,
-                  const SizedBox(height: 15.0),
-                  googleSignInButton,
-                  const SizedBox(height: 15.0),
-                ],
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    loginAnonymousButon,
+                    const SizedBox(height: 45.0),
+                    emailField,
+                    const SizedBox(height: 25.0),
+                    passwordField,
+                    txtbutton,
+                    const SizedBox(height: 35.0),
+                    loginEmailPasswordButon,
+                    const SizedBox(height: 15.0),
+                    googleSignInButton,
+                    const SizedBox(height: 15.0),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

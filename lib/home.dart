@@ -32,10 +32,6 @@ class _Home extends State<Home> {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login Demo App - HomePage'),
-        backgroundColor: Theme.of(context).primaryColor,
-      ),
       body: Center(child: SignOut),
     );
   }
