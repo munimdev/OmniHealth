@@ -5,9 +5,11 @@ import 'package:provider/provider.dart';
 import './auth.dart';
 import './firebaseuser.dart';
 import './wrapper.dart';
+import './constants/constants.dart';
 
-const appPrimaryColor = Color(0xFF19768F);
-const appAccentColor = Color(0xFFFFFFFF);
+import './screens/home/home.dart';
+import './screens/welcome/welcome.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +24,14 @@ class MyApp extends StatelessWidget {
       value: AuthService().user,
       initialData: null,
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        initialRoute: '/',
+        routes: {
+          // When navigating to the "/" route, build the WelcomeScreen widget.
+          '/': (context) => const WelcomeScreen(),
+          // When navigating to the "/home" route, build the Home widget.
+          '/home': (context) => Home(),
+        },
         theme: ThemeData(
           brightness: Brightness.light,
           primaryColor: appPrimaryColor,
@@ -33,6 +43,20 @@ class MyApp extends StatelessWidget {
             colorScheme:
                 Theme.of(context).colorScheme.copyWith(secondary: Colors.white),
           ),
+          inputDecorationTheme: const InputDecorationTheme(
+            filled: true,
+            fillColor: Color(0xFFEBF8DA),
+            focusColor: Color(0xFFEBF8DA),
+
+            iconColor: Color(0xFF52A870),
+            prefixIconColor: Color(0xFF52A870),
+            contentPadding: EdgeInsets.symmetric(
+                horizontal: 10.0, vertical: 10.0),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(30)),
+              borderSide: BorderSide.none,
+            ),
+          ),
           fontFamily: 'Outfit',
           textTheme: const TextTheme(
             headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
@@ -40,7 +64,7 @@ class MyApp extends StatelessWidget {
             bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
           ),
         ),
-        home: Wrapper(),
+        // home: Wrapper(),
       ),
     );
   }

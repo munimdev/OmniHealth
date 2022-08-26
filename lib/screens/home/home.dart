@@ -1,4 +1,4 @@
-import './auth.dart';
+import '../../auth.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -22,6 +22,7 @@ class _Home extends State<Home> {
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
           await _auth.signOut();
+          Navigator.popUntil(context, ModalRoute.withName("/"));
         },
         child: Text(
           "Log out",

@@ -2,6 +2,7 @@ import './loginuser.dart';
 import './auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import './constants/constants.dart';
 
 class Login extends StatefulWidget {
   final Function? toggleView;
@@ -23,24 +24,74 @@ class _Login extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    final emailField = TextFormField(
-        controller: _email,
-        autofocus: false,
-        validator: (value) {
-          if (value != null) {
-            if (value.contains('@') && value.endsWith('.com')) {
-              return null;
-            }
-            return 'Enter a Valid Email Address';
-          }
-        },
-        decoration: InputDecoration(
-            contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            hintText: "Email",
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
 
-    final passwordField = TextFormField(
+    final emailField = Container(
+      decoration: BoxDecoration(
+        boxShadow: const [
+          BoxShadow(
+            color: inputFieldBoxShadowColor,
+            blurRadius: inputFieldBlurRadius,
+            offset: inputFieldShadowOffset,
+          ),
+        ],
+        borderRadius: BorderRadius.circular(
+          inputFieldBorderRadius,
+        ),
+      ),
+      child: TextFormField(
+            controller: _email,
+            autofocus: false,
+            validator: (value) {
+              if (value != null) {
+                if (value.contains('@') && value.endsWith('.com')) {
+                  return null;
+                }
+                return 'Enter a Valid Email Address';
+              }
+            },
+            cursorColor: inputFieldFocusedColor,
+            decoration: InputDecoration(
+                contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                // hintText: "Email",
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(inputFieldBorderRadius)),
+                prefixIcon: Icon(Icons.mail),
+                labelText: "Email",
+                labelStyle: TextStyle(
+                  color: inputFieldFocusedColor,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(inputFieldBorderRadius),
+                  borderSide: const BorderSide(
+                    color: inputFieldEnabledColor,
+                    width: inputFieldBorderWidth,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(inputFieldBorderRadius),
+                  borderSide: const BorderSide(
+                    color: inputFieldFocusedColor,
+                    width: inputFieldBorderWidth,
+                  ),
+                ),
+            )
+        ),
+    );
+
+
+    final passwordField = Container(
+      decoration: BoxDecoration(
+          boxShadow: const [
+            BoxShadow(
+              color: inputFieldBoxShadowColor,
+              blurRadius: inputFieldBlurRadius,
+              offset: inputFieldShadowOffset,
+            ),
+          ],
+          borderRadius: BorderRadius.circular(
+            inputFieldBorderRadius,
+          ),
+      ),
+      child: TextFormField(
         obscureText: _obscureText,
         controller: _password,
         autofocus: false,
@@ -55,20 +106,41 @@ class _Login extends State<Login> {
           return null;
         },
         decoration: InputDecoration(
-            contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            hintText: "Password",
-            suffixIcon: IconButton(
-              icon:
-                  Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
-              onPressed: () {
-                setState(() {
-                  _obscureText = !_obscureText;
-                });
-              },
+          contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          // hintText: "Password",
+          prefixIcon: Icon(Icons.lock),
+          labelText: "Password",
+          labelStyle: TextStyle(
+            color: inputFieldFocusedColor,
+          ),
+          suffixIcon: IconButton(
+            icon:
+            Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
+            onPressed: () {
+              setState(() {
+                _obscureText = !_obscureText;
+              });
+            },
+          ),
+
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(inputFieldBorderRadius)),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(inputFieldBorderRadius),
+            borderSide: const BorderSide(
+              color: inputFieldEnabledColor,
+              width: inputFieldBorderWidth,
             ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(32.0),
-            )));
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(inputFieldBorderRadius),
+            borderSide: const BorderSide(
+              color: inputFieldFocusedColor,
+              width: inputFieldBorderWidth,
+            ),
+          ),
+        ),
+      )
+    );
 
     final txtbutton = TextButton(
         onPressed: () {
@@ -105,7 +177,8 @@ class _Login extends State<Login> {
       ),
     );
 
-    final loginEmailPasswordButon = Material(
+    final loginEmailPasswordButon =
+    Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
       color: Theme.of(context).primaryColor,
@@ -139,8 +212,8 @@ class _Login extends State<Login> {
     final googleSignInButton = Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: _isSigningIn
-          ? CircularProgressIndicator(
-        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF19768F)),
+          ? const CircularProgressIndicator(
+        valueColor: const AlwaysStoppedAnimation<Color>(const Color(0xFF19768F)),
       )
           : OutlinedButton(
         style: ButtonStyle(
