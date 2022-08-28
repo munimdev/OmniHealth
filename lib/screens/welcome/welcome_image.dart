@@ -11,11 +11,17 @@ class WelcomeImage extends StatelessWidget {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
-
+        mainAxisSize: MainAxisSize.max,
         children: [
         Stack(
           children: <Widget>[
-            Image(image: AssetImage('assets/images/landing-bg.jpg')),
+            ColorFiltered(
+              colorFilter: ColorFilter.mode(
+                Color(0xFFCEDEB9),
+                BlendMode.softLight
+              ),
+              child: Image(image: AssetImage('assets/images/landing-bg.jpg'))
+          ),
             Padding(
               padding: EdgeInsets.only(left: 25, top: 55),
               child: Text("Making healthcare easy",

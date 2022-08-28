@@ -8,11 +8,16 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   FirebaseUser? _firebaseUser(User? user) {
-    return user != null ? FirebaseUser(uid: user.uid) : null;
+    return user != null ? FirebaseUser(email: user.email, uid: user.uid) : null;
   }
 
   Stream<FirebaseUser?> get user {
     return _auth.authStateChanges().map(_firebaseUser);
+  }
+
+  Future<String?> getCurrentUserEmail() async {
+    final user = await _auth.currentUser;
+    return user!.email;
   }
 
   SnackBar customSnackBar({required String content}) {

@@ -3,10 +3,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 
 import './auth.dart';
+import './login.dart';
 import './firebaseuser.dart';
 import './wrapper.dart';
 import './constants/constants.dart';
 
+import './screens/login/login_screen.dart';
 import './screens/home/home.dart';
 import './screens/welcome/welcome.dart';
 
@@ -29,6 +31,7 @@ class MyApp extends StatelessWidget {
         routes: {
           // When navigating to the "/" route, build the WelcomeScreen widget.
           '/': (context) => const WelcomeScreen(),
+          '/login': (context) => LoginScreen(),
           // When navigating to the "/home" route, build the Home widget.
           '/home': (context) => Home(),
         },
@@ -45,11 +48,11 @@ class MyApp extends StatelessWidget {
           ),
           inputDecorationTheme: const InputDecorationTheme(
             filled: true,
-            fillColor: Color(0xFFEBF8DA),
-            focusColor: Color(0xFFEBF8DA),
+            fillColor: inputFieldBackground,
+            focusColor: inputFieldBackground,
 
-            iconColor: Color(0xFF52A870),
-            prefixIconColor: Color(0xFF52A870),
+            iconColor: inputFieldIconColor,
+            prefixIconColor: inputFieldIconColor,
             contentPadding: EdgeInsets.symmetric(
                 horizontal: 10.0, vertical: 10.0),
             border: OutlineInputBorder(

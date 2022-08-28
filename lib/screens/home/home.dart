@@ -21,6 +21,7 @@ class _Home extends State<Home> {
         minWidth: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
+          FocusScope.of(context).unfocus(); //ensure keyboard doesn't pop out on back
           await _auth.signOut();
           Navigator.popUntil(context, ModalRoute.withName("/"));
         },
@@ -32,8 +33,16 @@ class _Home extends State<Home> {
       ),
     );
 
-    return Scaffold(
-      body: Center(child: SignOut),
+    return WillPopScope(
+      onWillPop: () {
+        return Future.value(false); // if true allow back else block it
+      },
+      child: Scaffold(
+        body: Center(child: Padding(
+          padding: const EdgeInsets.all(30.0),
+          child: SignOut,
+        )),
+      ),
     );
   }
 }

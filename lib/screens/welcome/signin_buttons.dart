@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/services.dart';
 
 import '../../auth.dart';
 import '../../constants/constants.dart';
@@ -94,69 +95,71 @@ class _SigninButtonsState extends State<SigninButtons> {
                 ),
               ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 16.0),
-          child: _isSigningIn ?
-          const CircularProgressIndicator(
-            valueColor: const AlwaysStoppedAnimation<Color>(const Color(0xFF19768F)),
-          )
-              : Padding(
-            padding: const EdgeInsets.only(left: 30, right: 30),
-            child: SizedBox(
-              height: 50,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  elevation: MaterialStateProperty.all<double>(
-                      5.0
-                  ),
-                  backgroundColor: MaterialStateProperty.all(signupButtonColor),
-                  shape: MaterialStateProperty.all(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(40),
+        Container(
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: _isSigningIn ?
+            const CircularProgressIndicator(
+              valueColor: const AlwaysStoppedAnimation<Color>(const Color(0xFF19768F)),
+            )
+                : Padding(
+              padding: const EdgeInsets.only(left: 30, right: 30),
+              child: SizedBox(
+                height: 50,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    elevation: MaterialStateProperty.all<double>(
+                        5.0
+                    ),
+                    backgroundColor: MaterialStateProperty.all(signupButtonColor),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(40),
+                      ),
                     ),
                   ),
-                ),
-                onPressed: () async {
-                  setState(() {
-                    _isSigningIn = true;
-                  });
+                  onPressed: () async {
+                    setState(() {
+                      _isSigningIn = true;
+                    });
 
-                  dynamic user = await _auth.signInWithGoogle(context: context);
-                  if(user != null) {
-                    print("Signed in to Google");
-                    Navigator.pushNamed(
-                        context,
-                        '/home'
-                    );
-                  }
-                  setState(() {
-                    _isSigningIn = false;
-                  });
-                },
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                  child: Row(
-                    // mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      const Icon(
-                        Icons.mail,
-                        color: Colors.white,
-                        size: 25.0,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 27, right: 10),
-                        child: const Text(
-                          'Sign Up with Email',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontFamily: 'Outfit',
-                            color: Colors.white,
-                            fontWeight: FontWeight.w300,
-                          ),
+                    dynamic user = await _auth.signInWithGoogle(context: context);
+                    if(user != null) {
+                      print("Signed in to Google");
+                      Navigator.pushNamed(
+                          context,
+                          '/home'
+                      );
+                    }
+                    setState(() {
+                      _isSigningIn = false;
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                    child: Row(
+                      // mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        const Icon(
+                          Icons.mail,
+                          color: Colors.white,
+                          size: 25.0,
                         ),
-                      )
-                    ],
+                        const Padding(
+                          padding: EdgeInsets.only(left: 27, right: 10),
+                          child: const Text(
+                            'Sign Up with Email',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontFamily: 'Outfit',
+                              color: Colors.white,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -191,22 +194,33 @@ class _SigninButtonsState extends State<SigninButtons> {
               ),
             ]
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
-          child: Material(
-            elevation: 5.0,
-            borderRadius: BorderRadius.circular(30.0),
-            color: Theme.of(context).primaryColor,
-            child: MaterialButton(
-              minWidth: MediaQuery.of(context).size.width,
-              padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-              onPressed: () async {
-
-              },
-              child: Text(
-                "Log In",
-                style: TextStyle(color: Theme.of(context).primaryColorLight),
-                textAlign: TextAlign.center,
+        Container(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
+            child: Material(
+              elevation: 5.0,
+              borderRadius: BorderRadius.circular(30.0),
+              color: Theme.of(context).primaryColor,
+              child: MaterialButton(
+                minWidth: MediaQuery.of(context).size.width,
+                padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                onPressed: () async {
+                  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+                    statusBarColor: Colors.white,
+                  ));
+                  await Navigator.pushNamed(
+                      context,
+                      '/login'
+                  );
+                  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+                    statusBarColor: Color(0x7063666A),
+                  ));
+                },
+                child: Text(
+                  "Log In",
+                  style: TextStyle(color: Theme.of(context).primaryColorLight),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
           ),
