@@ -16,3 +16,45 @@ const inputFieldIconColor = Color(0xFF52A870);
 const inputFieldBackground = Color(0xFFEBF8DA);
 const inputFieldFocusedColor = Color(0xFF52A870);
 const inputFieldEnabledColor = Colors.transparent;
+
+
+
+//hajra constants
+
+const kDarkest = Color(0xFF26635B);
+const kAppleGreen = Color(0xFF52A870);
+const kMintGreen = Color(0xFFEBF8DA);
+const kMutedWidgetColor = Color(0x80FFFFFF);
+const kBlackOverlay = Color(0x80000000);
+const kLightBlue = Color(0xFFC8D8E4);
+
+const kDashboardWidgetTextStyle = TextStyle(
+  fontSize: 24,
+  fontWeight: FontWeight.w500,
+  fontFamily: 'Outfit',
+  color: kDarkest,
+  decoration: TextDecoration.none,
+);
+const kAppointmentWidgetTextStyle = TextStyle(
+  fontSize: 24,
+  fontWeight: FontWeight.w500,
+  fontFamily: 'Outfit',
+  color: kDarkest,
+  decoration: TextDecoration.none,
+);
+
+
+const kHeadingTextStyle = TextStyle(
+  fontSize: 32,
+  fontWeight: FontWeight.w700,
+  fontFamily: 'Outfit',
+  color: kDarkest,
+  decoration: TextDecoration.none,
+  shadows: [
+    Shadow(
+      offset: Offset(0, 4),
+      blurRadius: 4,
+      color: kBlackOverlay,
+    ),
+  ],
+);
