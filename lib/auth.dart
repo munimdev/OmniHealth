@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:omnihealth/screens/home/home.dart';
+import 'package:omnihealth/screens/signup/sms_code.dart';
 import './loginuser.dart';
 import './firebaseuser.dart';
 
@@ -38,6 +40,61 @@ class AuthService {
     } catch (e) {
       return FirebaseUser(code: e.toString(), uid: null);
     }
+  }
+
+  Future registerWithPhone(String phoneNum, BuildContext context) async{
+    _auth.verifyPhoneNumber(
+        phoneNumber: phoneNum,
+        timeout: Duration(seconds: 180),
+        verificationCompleted: (AuthCredential authCredential){
+          _auth.signInWithCredential(authCredential).then((UserCredential result) async {
+            await Navigator.pushAndRemoveUntil(
+                context,
+                PageRouteBuilder(
+                  // pageBuilder: (context, animation, secondaryAnimation) => Home(user: result.user, userData: null),
+                  pageBuilder: (context, animation, secondaryAnimation) => Home(),
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                    const begin = Offset(1.0, 0.0);
+                    const end = Offset.zero;
+                    const curve = Curves.ease;
+
+                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                    return SlideTransition(
+                      position: animation.drive(tween),
+                      child: child,
+                    );
+                  },
+                ),
+                ModalRoute.withName('/')
+            );
+          }).catchError((e){
+            print(e);
+          });
+        },
+        verificationFailed: (_) {},
+        codeSent: (String verificationId, [int? forceResendingToken]) async {
+          await Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) => SMSCodeScreen(phoneNumber: phoneNum,),
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  const begin = Offset(1.0, 0.0);
+                  const end = Offset.zero;
+                  const curve = Curves.ease;
+
+                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                  return SlideTransition(
+                    position: animation.drive(tween),
+                    child: child,
+                  );
+                },
+              )
+          );
+        },
+        codeAutoRetrievalTimeout: (_) {}
+    );
   }
 
   Future<User?> signInWithGoogle({required BuildContext context}) async {

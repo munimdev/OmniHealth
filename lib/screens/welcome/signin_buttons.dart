@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/services.dart';
 
 import '../../auth.dart';
 import '../../constants/constants.dart';
-import '../../login.dart';
+import '../login/login_screen.dart';
+import '../signup/input_phone.dart';
+import '../signup/input_email.dart';
 import '../home/home.dart';
 
 class SigninButtons extends StatefulWidget {
@@ -25,44 +26,56 @@ class _SigninButtonsState extends State<SigninButtons> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 16.0, top: 30.0),
-          child: _isSigningIn ?
+        Container(
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 16.0, top: 30.0),
+            child: _isSigningIn ?
             const CircularProgressIndicator(
               valueColor: const AlwaysStoppedAnimation<Color>(const Color(0xFF19768F)),
             )
-              : Padding(
-                padding: const EdgeInsets.only(left: 30, right: 30),
-                child: SizedBox(
-                  height: 50,
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      elevation: MaterialStateProperty.all<double>(
-                        5.0
-                      ),
-                      backgroundColor: MaterialStateProperty.all(signupButtonColor),
-                      shape: MaterialStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(40),
-                        ),
-                      ),
-                    ),
+                : Padding(
+              padding: const EdgeInsets.only(left: 30, right: 30),
+              child: SizedBox(
+                height: 50,
+                child: Material(
+                  elevation: 5.0,
+                  color: signupButtonColor,
+                  borderRadius: BorderRadius.circular(40),
+                  child: MaterialButton(
                     onPressed: () async {
-                      setState(() {
-                        _isSigningIn = true;
-                      });
-
-                      dynamic user = await _auth.signInWithGoogle(context: context);
-                      if(user != null) {
-                        print("Signed in to Google");
-                        Navigator.pushNamed(
+                      // setState(() {
+                      //   _isSigningIn = true;
+                      // });
+                      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+                        statusBarColor: Colors.grey[50],
+                      ));
+                       // dynamic user = await _auth.signInWithGoogle(context: context);
+                      // if(user != null) {
+                      await Navigator.push(
                           context,
-                          '/home'
-                        );
-                      }
-                      setState(() {
-                        _isSigningIn = false;
-                      });
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation, secondaryAnimation) => InputPhone(),
+                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                              const begin = Offset(1.0, 0.0);
+                              const end = Offset.zero;
+                              const curve = Curves.ease;
+
+                              var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                              return SlideTransition(
+                                position: animation.drive(tween),
+                                child: child,
+                              );
+                            },
+                          )
+                      );
+                      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+                        statusBarColor: Color(0x7063666A),
+                      ));
+                      // }
+                      // setState(() {
+                      //   _isSigningIn = false;
+                      // });
                     },
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -70,16 +83,15 @@ class _SigninButtonsState extends State<SigninButtons> {
                         // mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          SvgPicture.asset(
-                            'assets/icons/google.svg',
-                            height: 20.0,
+                          const Icon(
+                            Icons.phone,
                             color: Colors.white,
-                            width: 20.0,
+                            size: 25.0,
                           ),
                           const Padding(
                             padding: EdgeInsets.only(left: 27, right: 10),
-                            child: Text(
-                              'Sign Up with Google',
+                            child: const Text(
+                              'Sign Up with Phone',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontFamily: 'Outfit',
@@ -94,76 +106,73 @@ class _SigninButtonsState extends State<SigninButtons> {
                   ),
                 ),
               ),
+            ),
+          ),
         ),
         Container(
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 16.0),
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: _isSigningIn ?
-            const CircularProgressIndicator(
-              valueColor: const AlwaysStoppedAnimation<Color>(const Color(0xFF19768F)),
-            )
+              const CircularProgressIndicator(
+                valueColor: const AlwaysStoppedAnimation<Color>(const Color(0xFF19768F)),
+              )
                 : Padding(
-              padding: const EdgeInsets.only(left: 30, right: 30),
-              child: SizedBox(
-                height: 50,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    elevation: MaterialStateProperty.all<double>(
-                        5.0
-                    ),
-                    backgroundColor: MaterialStateProperty.all(signupButtonColor),
-                    shape: MaterialStateProperty.all(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40),
+                  padding: const EdgeInsets.only(left: 30, right: 30),
+                  child: SizedBox(
+                    height: 50,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        elevation: MaterialStateProperty.all<double>(
+                          5.0
+                        ),
+                        backgroundColor: MaterialStateProperty.all(signupButtonColor),
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                        ),
+                      ),
+                      onPressed: () async {
+                        setState(() {
+                          _isSigningIn = true;
+                        });
+
+                        Navigator.pushNamed(
+                          context,
+                          '/inputEmail'
+                        );
+                        setState(() {
+                          _isSigningIn = false;
+                        });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                        child: Row(
+                          // mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Icon(
+                              Icons.mail,
+                              size: 25.0,
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(left: 27, right: 10),
+                              child: Text(
+                                'Sign Up with Email',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontFamily: 'Outfit',
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                  onPressed: () async {
-                    setState(() {
-                      _isSigningIn = true;
-                    });
-
-                    dynamic user = await _auth.signInWithGoogle(context: context);
-                    if(user != null) {
-                      print("Signed in to Google");
-                      Navigator.pushNamed(
-                          context,
-                          '/home'
-                      );
-                    }
-                    setState(() {
-                      _isSigningIn = false;
-                    });
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                    child: Row(
-                      // mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        const Icon(
-                          Icons.mail,
-                          color: Colors.white,
-                          size: 25.0,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 27, right: 10),
-                          child: const Text(
-                            'Sign Up with Email',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontFamily: 'Outfit',
-                              color: Colors.white,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
                 ),
-              ),
-            ),
           ),
         ),
         Row(
@@ -206,11 +215,25 @@ class _SigninButtonsState extends State<SigninButtons> {
                 padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
                 onPressed: () async {
                   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-                    statusBarColor: Colors.white,
+                    statusBarColor: Colors.grey[50],
                   ));
-                  await Navigator.pushNamed(
+                  await Navigator.push(
                       context,
-                      '/login'
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) => LoginScreen(),
+                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                          const begin = Offset(1.0, 0.0);
+                          const end = Offset.zero;
+                          const curve = Curves.ease;
+
+                          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                          return SlideTransition(
+                            position: animation.drive(tween),
+                            child: child,
+                          );
+                        },
+                      )
                   );
                   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
                     statusBarColor: Color(0x7063666A),

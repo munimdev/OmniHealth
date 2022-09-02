@@ -10,6 +10,7 @@ import './constants/constants.dart';
 
 import './screens/login/login_screen.dart';
 import './screens/home/home.dart';
+import './screens/signup/input_phone.dart';
 import './screens/welcome/welcome.dart';
 
 
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
           '/login': (context) => LoginScreen(),
           // When navigating to the "/home" route, build the Home widget.
           '/home': (context) => Home(),
+          '/inputPhone': (context) => InputPhone(),
         },
         theme: ThemeData(
           brightness: Brightness.light,

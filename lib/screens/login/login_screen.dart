@@ -195,11 +195,22 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: appPrimaryColor,
+        backgroundColor: Colors.grey[50],
+        foregroundColor: Colors.black,
         elevation: 0,
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              tooltip: "Back",
+              icon: const Icon(Icons.arrow_back_ios_new, size: 17,), // Put icon of your preference.
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            );
+          },
+        ),
       ),
       body: Center(
           child: Form(

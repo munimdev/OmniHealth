@@ -15,7 +15,7 @@ class SigninOverlay extends StatelessWidget {
     return Container(
       transform: Matrix4.translationValues(0.0, -45.0, 0.0),
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: Color(0xFFFAFAFA),
         borderRadius: BorderRadius.vertical(top: Radius.circular(50.0)),
       ),
       child: Column(
