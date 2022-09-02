@@ -21,14 +21,14 @@ class _AppointmentsState extends State<Appointments> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: kMintGreen,
+      color: kBackgroundColor,
       child: SafeArea(
         child: Column(
           children:  [
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
-            Center(
+            const Center(
               child: Text(
                 'Make an Appointment!',
                 style: kHeadingTextStyle,
@@ -36,24 +36,16 @@ class _AppointmentsState extends State<Appointments> {
             ),
             Expanded(
                 child: Container(
-                  margin: EdgeInsets.fromLTRB(10, 20, 10, 10),
-                  padding: EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    color: kMutedWidgetColor,
-                    borderRadius: const BorderRadius.all(
+                  margin: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+                  padding: const EdgeInsets.all(15),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(
                       Radius.circular(20),
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.25),
-                        spreadRadius: 0,
-                        blurRadius: 4,
-                        offset: const Offset(0, 4), // changes position of shadow
-                      ),
-                    ],
                   ),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
                           'Choose a hospital',
@@ -61,27 +53,30 @@ class _AppointmentsState extends State<Appointments> {
                           textAlign: TextAlign.left,
                         ),
                         Material(
+                          borderRadius: BorderRadius.circular(10),
                           child: Expanded(
                             child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
                               width: 300,
-                              color: Colors.white,
-                              child: Center(
-                                child: DropdownButton(
-                                  borderRadius: BorderRadius.circular(10),
-                                  value: dropdownvalue,
-                                  icon: const Icon(Icons.keyboard_arrow_down),
-                                  items: items.map((String items) {
-                                    return DropdownMenuItem(
-                                      value: items,
-                                      child: Text(items),
-                                    );
-                                  }).toList(),
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      dropdownvalue = newValue!;
-                                    });
-                                  },
-                                ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white,
+                              ),
+                              child: DropdownButton(
+                                borderRadius: BorderRadius.circular(10),
+                                value: dropdownvalue,
+                                icon: const Icon(Icons.keyboard_arrow_down),
+                                items: items.map((String items) {
+                                  return DropdownMenuItem(
+                                    value: items,
+                                    child: Text(items),
+                                  );
+                                }).toList(),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    dropdownvalue = newValue!;
+                                  });
+                                },
                               ),
                             ),
                           ),
@@ -91,9 +86,67 @@ class _AppointmentsState extends State<Appointments> {
                           'Choose a department',
                           style: kDashboardWidgetTextStyle,
                         ),
+                        Material(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+                              width: 300,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white,
+                              ),
+                              child: DropdownButton(
+                                borderRadius: BorderRadius.circular(10),
+                                value: dropdownvalue,
+                                icon: const Icon(Icons.keyboard_arrow_down),
+                                items: items.map((String items) {
+                                  return DropdownMenuItem(
+                                    value: items,
+                                    child: Text(items),
+                                  );
+                                }).toList(),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    dropdownvalue = newValue!;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
                         const Text(
                           'Choose a Doctor',
                           style: kDashboardWidgetTextStyle,
+                        ),
+                        Material(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+                              width: 300,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white,
+                              ),
+                              child: DropdownButton(
+                                borderRadius: BorderRadius.circular(10),
+                                value: dropdownvalue,
+                                icon: const Icon(Icons.keyboard_arrow_down),
+                                items: items.map((String items) {
+                                  return DropdownMenuItem(
+                                    value: items,
+                                    child: Text(items),
+                                  );
+                                }).toList(),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    dropdownvalue = newValue!;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
                         ),
                         const Text(
                           'Choose a Date',
@@ -138,7 +191,7 @@ class _AppointmentsState extends State<Appointments> {
                                           builder: (context){
                                             return MakeAppointment(
                                               dateTime: date,
-                                              endTime: date.add(Duration(minutes: 15)),
+                                              endTime: date.add(const Duration(minutes: 15)),
                                             );
                                           },
                                     ),
@@ -185,9 +238,9 @@ class _AppointmentsState extends State<Appointments> {
                               dayFormat: 'EEE',
                             ),
                             blackoutDates: [
-                              DateTime(2022,08,31).add(Duration(days:3)),
+                              DateTime(2022,08,31).add(const Duration(days:3)),
                             ],
-                            blackoutDatesTextStyle: TextStyle(
+                            blackoutDatesTextStyle: const TextStyle(
                               color: Colors.red,
                             ),
                             dataSource: MeetingDataSource(getAppointments()),

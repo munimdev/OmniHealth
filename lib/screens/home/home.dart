@@ -4,6 +4,7 @@ import 'package:omnihealth/constants/constants.dart';
 import '../../Components/dashboard_widgets.dart';
 import '../../Components/profile_card.dart';
 import '../appointments/appointments.dart';
+import '../testresults/test_results.dart';
 class Home extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -120,7 +121,16 @@ class _Home extends State<Home> {
                     ],
                   ),
                   TextButton(
-                    onPressed: (){},
+                    onPressed: (){
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context){
+                                return TestResults();
+                              }
+                          ),
+                      );
+                    },
                     child: const DashboardWidgetVertical(
                       title: 'Test Results',
                       icon: Icon(

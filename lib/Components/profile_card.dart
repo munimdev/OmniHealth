@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:omnihealth/constants/constants.dart';
 class ProfileCard extends StatelessWidget {
-  ProfileCard({required this.profilePicture, required this.username}); //change default photo later
+  const ProfileCard({Key? key, required this.profilePicture, required this.username}) : super(key: key); //change default photo later
   final String profilePicture;
   final String username;
   @override
