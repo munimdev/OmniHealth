@@ -27,6 +27,7 @@ const kMintGreen = Color(0xFFEBF8DA);
 const kMutedWidgetColor = Color(0x80FFFFFF);
 const kBlackOverlay = Color(0x80000000);
 const kLightBlue = Color(0xFFC8D8E4);
+const kBackgroundColor = Color(0xFFF5F5F5);
 
 const kDashboardWidgetTextStyle = TextStyle(
   fontSize: 24,
@@ -57,4 +58,26 @@ const kHeadingTextStyle = TextStyle(
       color: kBlackOverlay,
     ),
   ],
+);
+
+const kSmallRedText = TextStyle(
+  fontFamily: 'Outfit',
+  fontWeight: FontWeight.w400,
+  color: Color(0xFFF34044),
+  fontSize: 20,
+  decoration: TextDecoration.none,
+);
+const kSmallGreenText = TextStyle(
+  fontFamily: 'Outfit',
+  fontWeight: FontWeight.w400,
+  color: kAppleGreen,
+  fontSize: 20,
+  decoration: TextDecoration.none,
+);
+const kMiniGreyText = TextStyle(
+  fontFamily: 'Outfit',
+  fontWeight: FontWeight.w400,
+  color: Color(0xFF8B8888),
+  fontSize: 14,
+  decoration: TextDecoration.none,
 );

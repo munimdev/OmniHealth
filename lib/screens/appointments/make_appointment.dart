@@ -39,7 +39,7 @@ class _MakeAppointmentState extends State<MakeAppointment> {
         child: Expanded(
           child: Container(
             color: Colors.white,
-            margin: EdgeInsets.all(20),
+            margin: const EdgeInsets.all(20),
             child: Column(
               children: [
                 Text(
@@ -50,7 +50,7 @@ class _MakeAppointmentState extends State<MakeAppointment> {
                   'Appointment end time: $endHours:$endMinutes',
                   style: kDashboardWidgetTextStyle,
                 ),
-                Text(
+                const Text(
                   'Enter Agenda',
                   style: kDashboardWidgetTextStyle,
                 ),
