@@ -57,17 +57,7 @@ class _SMSCodeScreenState extends State<SMSCodeScreen> {
         backgroundColor: Colors.grey[50],
         foregroundColor: Colors.black,
         elevation: 0,
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              tooltip: "Back",
-              icon: const Icon(Icons.arrow_back_ios_new, size: 17,), // Put icon of your preference.
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            );
-          },
-        ),
+        leading: scaffoldBackButton,
       ),
       body: Container(
         child: Column(

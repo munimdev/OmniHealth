@@ -18,7 +18,7 @@ class AuthService {
   }
 
   Future<String?> getCurrentUserEmail() async {
-    final user = await _auth.currentUser;
+    final user = _auth.currentUser;
     return user!.email;
   }
 
