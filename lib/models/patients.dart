@@ -480,7 +480,7 @@ class Patient {
     //add patient to firestore
     await FirebaseFirestore.instance
         .collection('patients')
-        .doc(patient.id)
+        .doc(patient.uid)
         .set(patient.toMap());
   }
 
@@ -489,7 +489,7 @@ class Patient {
     //update patient in firestore
     await FirebaseFirestore.instance
         .collection('patients')
-        .doc(patient.id)
+        .doc(patient.uid)
         .update(patient.toMap());
   }
 
@@ -498,7 +498,7 @@ class Patient {
     //delete patient from firestore
     await FirebaseFirestore.instance
         .collection('patients')
-        .doc(patient.id)
+        .doc(patient.uid)
         .delete();
   }
 }
