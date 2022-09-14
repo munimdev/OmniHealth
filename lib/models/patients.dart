@@ -146,6 +146,37 @@ class Patient {
     );
   }
 
+  //to firestore
+  factory Patient.fromFirestore(DocumentSnapshot doc) {
+    Map data = doc.data() as Map;
+    return Patient(
+      uid: data['uid'],
+      fname: data['fname'],
+      lname: data['lname'],
+      email: data['email'],
+      phone: data['phone'],
+      city: data['city'],
+      cnic: data['cnic'],
+      address: List<String>.from(data['address']),
+      dob: List<int>.from(data['dob']),
+    );
+  }
+
+  //from firestore
+  Map<String, dynamic> toFirestore() {
+    return {
+      'uid': uid,
+      'fname': fname,
+      'lname': lname,
+      'email': email,
+      'phone': phone,
+      'city': city,
+      'cnic': cnic,
+      'address': address,
+      'dob': dob,
+    };
+  }
+
   //convert patient data to json
   String toJson() => json.encode(toMap());
 
