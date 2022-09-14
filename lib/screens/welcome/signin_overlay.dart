@@ -13,17 +13,22 @@ class SigninOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      constraints: BoxConstraints(
+        maxHeight: 400,
+      ),
       transform: Matrix4.translationValues(0.0, -45.0, 0.0),
       decoration: const BoxDecoration(
         color: Color(0xFFFAFAFA),
         borderRadius: BorderRadius.vertical(top: Radius.circular(50.0)),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 30.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: const [
                 Icon(
                   Icons.health_and_safety_outlined,

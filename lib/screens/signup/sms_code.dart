@@ -112,6 +112,12 @@ class _SMSCodeScreenState extends State<SMSCodeScreen> {
 
                   // Sign the user in (or link) with the credential
                   await _auth.signInWithCredential(credential).then((UserCredential result) async => {
+
+                    // fetch patients data from cloud firestore
+
+
+
+
                     await Navigator.pushAndRemoveUntil(
                         context,
                         PageRouteBuilder(

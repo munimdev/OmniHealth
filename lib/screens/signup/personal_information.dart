@@ -5,6 +5,14 @@ import '../../utils/input_field.dart';
 
 class PersonalInformation extends StatelessWidget {
   PersonalInformation({Key? key}) : super(key: key);
+
+  //create controllers for the text fields
+  final TextEditingController _phoneNumber = TextEditingController();
+  final TextEditingController _address = TextEditingController();
+  final TextEditingController _city = TextEditingController();
+  final TextEditingController _cnic = TextEditingController();
+  final TextEditingController _dob = TextEditingController();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override

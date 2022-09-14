@@ -8,16 +8,23 @@ class InputField extends StatefulWidget {
   dynamic? suffixIcon;
   bool obscureText = false;
   bool? isPasswordField = false;
+  bool? capitalizeFirstLetter = false;
   Icon? prefixIcon;
   String? Function(String?)? validator;
 
-  InputField({required this.inputController, required this.headingText, required this.obscureText, this.labelText,this.isPasswordField, this.prefixIcon=const Icon(null), this.suffixIcon=const Icon(null), this.validator, Key? key}) : super(key: key);
+  InputField({required this.inputController, required this.headingText, required this.obscureText, this.labelText,this.isPasswordField, this.prefixIcon=const Icon(null), this.suffixIcon=const Icon(null), this.validator, this.capitalizeFirstLetter, Key? key}) : super(key: key);
 
   @override
   State<InputField> createState() => _InputFieldState();
 }
 
 class _InputFieldState extends State<InputField> {
+
+  bool hasUserClicked = false;
+  bool inputFieldErrorMessage() {
+    return hasUserClicked && widget.validator!(widget.inputController.text) != null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -33,40 +40,66 @@ class _InputFieldState extends State<InputField> {
               fontWeight: FontWeight.w400,
               color: inputFieldHeadingColor,
             ),
-
           ),
         ),
-        Container(
-          decoration: BoxDecoration(
-            boxShadow: const [
-              BoxShadow(
-                color: inputFieldBoxShadowColor,
-                blurRadius: inputFieldBlurRadius,
-                offset: inputFieldShadowOffset,
+        Material(
+          color: Colors.transparent,
+          child: Container(
+            decoration: BoxDecoration(
+              boxShadow: const [
+                BoxShadow(
+                  color: inputFieldBoxShadowColor,
+                  blurRadius: inputFieldBlurRadius,
+                  offset: inputFieldShadowOffset,
+                ),
+              ],
+              borderRadius: BorderRadius.circular(
+                inputFieldBorderRadius,
               ),
-            ],
-            borderRadius: BorderRadius.circular(
-              inputFieldBorderRadius,
+            ),
+            child: TextFormField(
+                controller: widget.inputController,
+                autofocus: false,
+                obscureText: widget.obscureText,
+                textCapitalization: widget.capitalizeFirstLetter == true ? TextCapitalization.sentences : TextCapitalization.none,
+                validator: widget.validator,
+                cursorColor: inputFieldFocusedColor,
+                textInputAction: TextInputAction.next,
+                decoration: inputFieldDecoration.copyWith(
+                  // prefixIcon: widget.prefixIcon,
+                  suffixIcon: widget.isPasswordField! ? IconButton(
+                    icon: Icon(widget.obscureText ? Icons.visibility : Icons.visibility_off),
+                    onPressed: () {
+                      setState(() {
+                        widget.obscureText = !widget.obscureText;
+                      });
+                    },
+                  ) : widget.suffixIcon,
+                  labelText: widget.labelText,
+                  //!! Hide the default error message here
+                  errorStyle: TextStyle(fontSize: 0),
+
+                ),
+              onTap: () {
+                if(!hasUserClicked) {
+                  setState(() {
+                    hasUserClicked = true;
+                  });
+                }
+              },
             ),
           ),
-          child: TextFormField(
-              controller: widget.inputController,
-              autofocus: false,
-              obscureText: widget.obscureText,
-              validator: widget.validator,
-              cursorColor: inputFieldFocusedColor,
-              decoration: inputFieldDecoration.copyWith(
-                // prefixIcon: widget.prefixIcon,
-                suffixIcon: widget.isPasswordField! ? IconButton(
-                  icon: Icon(widget.obscureText ? Icons.visibility : Icons.visibility_off),
-                  onPressed: () {
-                    setState(() {
-                      widget.obscureText = !widget.obscureText;
-                    });
-                  },
-                ) : widget.suffixIcon,
-                labelText: widget.labelText,
-              )
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: inputFieldErrorMessage() ? 15.0 : 0, top: inputFieldErrorMessage() ? 5.0 : 0),
+          child: Text(
+            widget.validator != null ? widget.validator!(widget.inputController.text) ?? '' : '',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              fontSize: inputFieldErrorMessage() ? 12 : 0,
+              fontWeight: FontWeight.w400,
+              color: Colors.red,
+            ),
           ),
         ),
       ],

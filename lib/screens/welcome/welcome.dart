@@ -21,12 +21,13 @@ class WelcomeScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Expanded(
+              flex: 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  const WelcomeImage(),
-                  SigninOverlay(),
+                      const Expanded(flex: 1, child: WelcomeImage()),
+                      // Expanded(flex: 1, child: SigninOverlay()),
                 ],
               ),
             ),

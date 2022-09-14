@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../auth.dart';
 import '../../constants/constants.dart';
@@ -11,7 +12,6 @@ import '../signup/input_email.dart';
 import '../home/home.dart';
 
 class SigninButtons extends StatefulWidget {
-
   const SigninButtons({Key? key}) : super(key: key);
 
   @override
@@ -19,16 +19,17 @@ class SigninButtons extends StatefulWidget {
 }
 
 class _SigninButtonsState extends State<SigninButtons> {
-
-  bool _isSigningIn = false;
   final AuthService _auth = AuthService();
+  bool _isSigningIn = false;
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 30, right: 30, bottom: 16.0, top: 30.0),
+          padding: const EdgeInsets.only(
+              left: 30, right: 30, bottom: 16.0, top: 30.0),
           child: SizedBox(
             height: 50,
             child: Material(
@@ -43,26 +44,29 @@ class _SigninButtonsState extends State<SigninButtons> {
                   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
                     statusBarColor: Colors.grey[50],
                   ));
-                   // dynamic user = await _auth.signInWithGoogle(context: context);
+                  // dynamic user = await _auth.signInWithGoogle(context: context);
                   // if(user != null) {
+                  getData();
                   await Navigator.push(
                       context,
                       PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) => InputPhone(),
-                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            InputPhone(),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) {
                           const begin = Offset(1.0, 0.0);
                           const end = Offset.zero;
                           const curve = Curves.ease;
 
-                          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                          var tween = Tween(begin: begin, end: end)
+                              .chain(CurveTween(curve: curve));
 
                           return SlideTransition(
                             position: animation.drive(tween),
                             child: child,
                           );
                         },
-                      )
-                  );
+                      ));
                   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
                     statusBarColor: Color(0x7063666A),
                   ));
@@ -114,6 +118,7 @@ class _SigninButtonsState extends State<SigninButtons> {
                   // setState(() {
                   //   _isSigningIn = true;
                   // });
+
                   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
                     statusBarColor: Colors.grey[50],
                   ));
@@ -122,21 +127,23 @@ class _SigninButtonsState extends State<SigninButtons> {
                   await Navigator.push(
                       context,
                       PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) => UserInfoScreen(),
-                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            UserInfoScreen(),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) {
                           const begin = Offset(1.0, 0.0);
                           const end = Offset.zero;
                           const curve = Curves.ease;
 
-                          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                          var tween = Tween(begin: begin, end: end)
+                              .chain(CurveTween(curve: curve));
 
                           return SlideTransition(
                             position: animation.drive(tween),
                             child: child,
                           );
                         },
-                      )
-                  );
+                      ));
                   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
                     statusBarColor: Color(0x7063666A),
                   ));
@@ -175,34 +182,30 @@ class _SigninButtonsState extends State<SigninButtons> {
             ),
           ),
         ),
-        Row(
-            children: <Widget>[
-              Expanded(
-                child: Container(
-                    margin: const EdgeInsets.only(left: 35.0, right: 15.0),
-                    child: const Divider(
-                      color: Colors.black,
-                      height: 36,
-                    )),
-              ),
-              const Text("OR",
-                style: TextStyle(
+        Row(children: <Widget>[
+          Expanded(
+            child: Container(
+                margin: const EdgeInsets.only(left: 35.0, right: 15.0),
+                child: const Divider(
+                  color: Colors.black,
+                  height: 36,
+                )),
+          ),
+          const Text("OR",
+              style: TextStyle(
                   color: Colors.grey,
                   decoration: TextDecoration.none,
                   fontSize: 16,
-                  fontWeight: FontWeight.w300
-                )
-              ),
-              Expanded(
-                child: Container(
-                    margin: const EdgeInsets.only(left: 15.0, right: 35.0),
-                    child: const Divider(
-                      color: Colors.black,
-                      height: 36,
-                    )),
-              ),
-            ]
-        ),
+                  fontWeight: FontWeight.w300)),
+          Expanded(
+            child: Container(
+                margin: const EdgeInsets.only(left: 15.0, right: 35.0),
+                child: const Divider(
+                  color: Colors.black,
+                  height: 36,
+                )),
+          ),
+        ]),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
           child: Material(
@@ -221,21 +224,23 @@ class _SigninButtonsState extends State<SigninButtons> {
                   await Navigator.push(
                       context,
                       PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) => LoginScreen(),
-                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            LoginScreen(),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) {
                           const begin = Offset(1.0, 0.0);
                           const end = Offset.zero;
                           const curve = Curves.ease;
 
-                          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                          var tween = Tween(begin: begin, end: end)
+                              .chain(CurveTween(curve: curve));
 
                           return SlideTransition(
                             position: animation.drive(tween),
                             child: child,
                           );
                         },
-                      )
-                  );
+                      ));
                   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
                     statusBarColor: Color(0x7063666A),
                   ));
@@ -254,8 +259,16 @@ class _SigninButtonsState extends State<SigninButtons> {
   }
 }
 
-
-
+//function to fetch data from cloud firestore
+getData() async {
+  final databaseReference = FirebaseFirestore.instance;
+  databaseReference
+      .collection('patients')
+      .get()
+      .then((QuerySnapshot querySnapshot) {
+    print(querySnapshot.docs.first.data());
+  });
+}
 
 
 

@@ -6,7 +6,64 @@ import '../../utils/input_field.dart';
 
 class UserInfoScreen extends StatelessWidget {
   UserInfoScreen({Key? key}) : super(key: key);
+
+  final TextEditingController _firstName = TextEditingController();
+  final TextEditingController _lastName = TextEditingController();
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _password = TextEditingController();
+  final TextEditingController _confirmPassword = TextEditingController();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _firstName.dispose();
+    _lastName.dispose();
+    _email.dispose();
+    _password.dispose();
+    _confirmPassword.dispose();
+  }
+
+  String? passwordValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter a password';
+    }
+    if (value.length < 8) {
+      return 'Password must be at least 8 characters';
+    }
+    return null;
+  }
+
+  //validate user name
+  String? nameValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter a name';
+    }
+    return null;
+  }
+
+  //validate if user entered a valid email
+  String? emailValidator(String? value) {
+
+    if (
+    RegExp(
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'
+    ).hasMatch(value!)) {
+      return null;
+    }
+    return "Please enter a valid email address";
+  }
+
+  //validate confirm password
+  String? confirmPasswordValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please confirm your password';
+    }
+    if (value != _password.text) {
+      return 'Passwords do not match';
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,15 +124,15 @@ class UserInfoScreen extends StatelessWidget {
                   ),
                   ],
                 ),
-                InputField(inputController: TextEditingController(), headingText: 'First Name', obscureText: false, isPasswordField: false, labelText: '',),
+                InputField(inputController: _firstName, headingText: 'First Name', obscureText: false, isPasswordField: false, labelText: '', validator: nameValidator, capitalizeFirstLetter: true),
                 const SizedBox(height: 20.0),
-                InputField(inputController: TextEditingController(), headingText: 'Last Name', obscureText: false, isPasswordField: false, labelText: '',),
+                InputField(inputController: _lastName, headingText: 'Last Name', obscureText: false, isPasswordField: false, labelText: '', validator: nameValidator, capitalizeFirstLetter: true),
                 const SizedBox(height: 20.0),
-                InputField(inputController: TextEditingController(), headingText: 'Email', obscureText: false, isPasswordField: false, labelText: '',),
+                InputField(inputController: _email, headingText: 'Email', obscureText: false, isPasswordField: false, labelText: '', validator: emailValidator,),
                 const SizedBox(height: 20.0),
-                InputField(inputController: TextEditingController(), headingText: 'Password', obscureText: false, isPasswordField: false, labelText: '',),
+                InputField(inputController: _password, headingText: 'Password', obscureText: false, isPasswordField: false, labelText: '', validator: passwordValidator,),
                 const SizedBox(height: 20.0),
-                InputField(inputController: TextEditingController(), headingText: 'Confirm Password', obscureText: false, isPasswordField: false, labelText: '',),
+                InputField(inputController: _confirmPassword, headingText: 'Confirm Password', obscureText: false, isPasswordField: false, labelText: '', validator: confirmPasswordValidator,),
                 const SizedBox(height: 35.0),
                 Material(
                   elevation: 5.0,
@@ -89,26 +146,26 @@ class UserInfoScreen extends StatelessWidget {
                       onPressed: () async {
                         FocusScope.of(context).unfocus();
                         if (_formKey.currentState!.validate()) {
+                          await Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder: (context, animation, secondaryAnimation) => PersonalInformation(),
+                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                  const begin = Offset(1.0, 0.0);
+                                  const end = Offset.zero;
+                                  const curve = Curves.ease;
 
+                                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                                  return SlideTransition(
+                                    position: animation.drive(tween),
+                                    child: child,
+                                  );
+                                },
+                              )
+                          );
                         }
-                        await Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) => PersonalInformation(),
-                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                const begin = Offset(1.0, 0.0);
-                                const end = Offset.zero;
-                                const curve = Curves.ease;
 
-                                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-                                return SlideTransition(
-                                  position: animation.drive(tween),
-                                  child: child,
-                                );
-                              },
-                            )
-                        );
                       },
                       child: Text(
                         "Next",
@@ -126,3 +183,4 @@ class UserInfoScreen extends StatelessWidget {
     );
   }
 }
+

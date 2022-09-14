@@ -150,3 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );;
   }
 }
+
+//fetch patients data from cloud firestore and send it to the Home screen on login
+// Language: dart
+// Path: lib\screens\home\home_screen.dart

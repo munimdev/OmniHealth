@@ -13,7 +13,6 @@ import './screens/home/home.dart';
 import './screens/signup/input_phone.dart';
 import './screens/welcome/welcome.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -41,7 +40,6 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.light,
           primaryColor: appPrimaryColor,
           primaryColorLight: Colors.white,
-
           buttonTheme: ButtonThemeData(
             buttonColor: appPrimaryColor,
             textTheme: ButtonTextTheme.primary,
@@ -52,11 +50,10 @@ class MyApp extends StatelessWidget {
             filled: true,
             fillColor: inputFieldBackground,
             focusColor: inputFieldBackground,
-
             iconColor: inputFieldIconColor,
             prefixIconColor: inputFieldIconColor,
-            contentPadding: EdgeInsets.symmetric(
-                horizontal: 10.0, vertical: 10.0),
+            contentPadding:
+                EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(30)),
               borderSide: BorderSide.none,
