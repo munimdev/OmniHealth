@@ -1,10 +1,13 @@
-import '../../auth.dart';
 import 'package:flutter/material.dart';
 import 'package:omnihealth/constants/constants.dart';
+
+import '../../auth.dart';
 import '../../Components/dashboard_widgets.dart';
 import '../../Components/profile_card.dart';
 import '../appointments/appointments.dart';
 import '../testresults/test_results.dart';
+import '../../models/patients.dart';
+
 class Home extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {

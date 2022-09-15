@@ -15,9 +15,57 @@ const inputFieldShadowOffset = Offset(0, 3);
 const inputFieldIconColor = Color(0xFF52A870);
 const inputFieldBackground = Color(0xFFEBF8DA);
 const inputFieldFocusedColor = Color(0xFF52A870);
+const inputFieldHeadingColor = Color(0xFF52A870);
 const inputFieldEnabledColor = Colors.transparent;
 
+const omniHealthHeading =
+Text(
+  "OmniHealth",
+  textAlign: TextAlign.left,
+  style: TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 30,
+    fontFamily: defaultFontFamily,
+    decoration: TextDecoration.none,
+    color: appPrimaryColor,
+  ),
+);
 
+var scaffoldBackButton = Builder(
+  builder: (BuildContext context) {
+    return IconButton(
+      tooltip: "Back",
+      icon: const Icon(Icons.arrow_back_ios_new, size: 17,), // Put icon of your preference.
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+  },
+);
+
+var inputFieldDecoration = InputDecoration(
+  contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+  // hintText: "Password",
+  labelStyle: TextStyle(
+    color: inputFieldFocusedColor,
+  ),
+
+  border: OutlineInputBorder(borderRadius: BorderRadius.circular(inputFieldBorderRadius)),
+  enabledBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(inputFieldBorderRadius),
+    borderSide: const BorderSide(
+      color: inputFieldEnabledColor,
+      width: inputFieldBorderWidth,
+    ),
+  ),
+  focusedBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(inputFieldBorderRadius),
+    borderSide: const BorderSide(
+      color: inputFieldFocusedColor,
+      width: inputFieldBorderWidth,
+    ),
+  ),
+);
 
 //hajra constants
 

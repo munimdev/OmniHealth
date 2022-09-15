@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:omnihealth/screens/welcome/signin_overlay.dart';
 import '../../constants/constants.dart';
 
 const defaultPadding = 15.0;
@@ -8,35 +9,32 @@ class WelcomeImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-        Stack(
-          children: <Widget>[
-            ColorFiltered(
-              colorFilter: ColorFilter.mode(
-                Color(0xFFCEDEB9),
-                BlendMode.softLight
-              ),
-              child: Image(image: AssetImage('assets/images/landing-bg.jpg'))
+    return Stack(
+      children: <Widget>[
+        ColorFiltered(
+          colorFilter: ColorFilter.mode(
+            Color(0xFFCEDEB9),
+            BlendMode.softLight
           ),
-            Padding(
-              padding: EdgeInsets.only(left: 25, top: 55),
-              child: Text("Making healthcare easy",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 55,
-                    fontFamily: defaultFontFamily,
-                    decoration: TextDecoration.none,
-                    color: primaryTextColor,
-                ),
-              ),
+          child: Image(image: AssetImage('assets/images/landing-bg.jpg'))
+      ),
+        const Padding(
+          padding: EdgeInsets.only(left: 25, top: 55),
+          child: Text("Making healthcare easy",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 55,
+                fontFamily: defaultFontFamily,
+                decoration: TextDecoration.none,
+                color: primaryTextColor,
             ),
-          ]
+          ),
         ),
-
+        Positioned(
+          top: 380,
+          width: MediaQuery.of(context).size.width,
+          child: SigninOverlay(),
+        ),
       ]
     );
   }
