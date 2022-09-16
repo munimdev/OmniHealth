@@ -15,22 +15,53 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   bool _obscureText = true;
   final _email = TextEditingController();
   final _password = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final AuthService _auth = AuthService();
 
+  String? passwordValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter a password';
+    }
+    if (value.length < 8) {
+      return 'Password must be at least 8 characters';
+    }
+    return null;
+  }
+
+  //validate if user entered a valid email
+  String? emailValidator(String? value) {
+    if (RegExp(
+            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+        .hasMatch(value!)) {
+      return null;
+    }
+    return "Please enter a valid email address";
+  }
+
   @override
   Widget build(BuildContext context) {
+    final emailField = InputField(
+      inputController: _email,
+      headingText: 'Email',
+      obscureText: false,
+      isPasswordField: false,
+      labelText: '',
+      validator: emailValidator,
+    );
 
-    final emailField = InputField(inputController: TextEditingController(), headingText: 'Email', obscureText: false, isPasswordField: false, labelText: '',);
+    final testPassword = InputField(
+      inputController: _password,
+      headingText: 'Password',
+      obscureText: true,
+      isPasswordField: true,
+      labelText: '',
+      validator: passwordValidator,
+    );
 
-    final testPassword = InputField(inputController: TextEditingController(), headingText: 'Password', obscureText: true, isPasswordField: true, labelText: '',);
-
-    final loginEmailPasswordButon =
-    Material(
+    final loginEmailPasswordButon = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(50.0),
       color: Theme.of(context).primaryColor,
@@ -53,26 +84,23 @@ class _LoginScreenState extends State<LoginScreen> {
                         content: Text(result.code),
                       );
                     });
-              }
-              else {
+              } else {
                 String? emailAddress;
 
-                _auth.getCurrentUserEmail().then(
-                    (value) => emailAddress = value
-                );
+                _auth
+                    .getCurrentUserEmail()
+                    .then((value) => emailAddress = value);
 
                 print(emailAddress);
-                Navigator.pushNamed(
-                    context,
-                    '/home',
-                    arguments: LoginInfo(email: emailAddress)
-                );
+                Navigator.pushNamed(context, '/home',
+                    arguments: LoginInfo(email: emailAddress));
               }
             }
           },
           child: Text(
             "Sign in",
-            style: TextStyle(color: Theme.of(context).primaryColorLight, fontSize: 16),
+            style: TextStyle(
+                color: Theme.of(context).primaryColorLight, fontSize: 16),
             textAlign: TextAlign.center,
           ),
         ),
@@ -89,36 +117,34 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           omniHealthHeading,
-            const Text(
-              "Login to your account!",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 30,
-                fontFamily: defaultFontFamily,
-                decoration: TextDecoration.none,
-                color: inputFieldHeadingColor,
-              ),
+          const Text(
+            "Login to your account!",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 30,
+              fontFamily: defaultFontFamily,
+              decoration: TextDecoration.none,
+              color: inputFieldHeadingColor,
             ),
-            Row(
-              children: [
-                const Text(
-                  "Don't have an account?",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    fontFamily: defaultFontFamily,
-                    decoration: TextDecoration.none,
-                    color: inputFieldHeadingColor,
-                  ),
+          ),
+          Row(
+            children: [
+              const Text(
+                "Don't have an account?",
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  fontFamily: defaultFontFamily,
+                  decoration: TextDecoration.none,
+                  color: inputFieldHeadingColor,
                 ),
-                TextButton(
-                  onPressed: () { },
-                  child: const Text(
+              ),
+              TextButton(
+                onPressed: () {},
+                child: const Text(
                   "Register!",
                   textAlign: TextAlign.left,
                   style: TextStyle(
@@ -128,10 +154,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     decoration: TextDecoration.none,
                     color: inputFieldHeadingColor,
                   ),
-                ),)
-              ],
-            ),
-            Form(
+                ),
+              )
+            ],
+          ),
+          Form(
             key: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -144,10 +171,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 loginEmailPasswordButon,
               ],
             ),
-          ),]
-        ),
+          ),
+        ]),
       ),
-    );;
+    );
+    ;
   }
 }
 

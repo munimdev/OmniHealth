@@ -457,19 +457,19 @@ class Doctor {
     return doctors;
   }
 
-  //get doctor reviews
-  static Future<List<Review>> getDoctorReviews(String doctorId) async {
-    List<Review> reviews = [];
-    await FirebaseFirestore.instance
-        .collection('doctors')
-        .doc(doctorId)
-        .collection('reviews')
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      for (var doc in querySnapshot.docs) {
-        reviews.add(Review.fromMap(doc.data() as Map<String, dynamic>));
-      }
-    });
-    return reviews;
-  }
+//   //get doctor reviews
+//   static Future<List<Review>> getDoctorReviews(String doctorId) async {
+//     List<Review> reviews = [];
+//     await FirebaseFirestore.instance
+//         .collection('doctors')
+//         .doc(doctorId)
+//         .collection('reviews')
+//         .get()
+//         .then((QuerySnapshot querySnapshot) {
+//       for (var doc in querySnapshot.docs) {
+//         reviews.add(Review.fromMap(doc.data() as Map<String, dynamic>));
+//       }
+//     });
+//     return reviews;
+//   }
 }
