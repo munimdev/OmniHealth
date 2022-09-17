@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:omnihealth/constants/constants.dart';
 import 'package:omnihealth/Components/lab_result_holder.dart';
-
-
+import 'package:omnihealth/Components/universal_functions.dart';
 class TestResults extends StatefulWidget {
   const TestResults({Key? key}) : super(key: key);
 
@@ -12,281 +10,130 @@ class TestResults extends StatefulWidget {
 }
 
 class _TestResultsState extends State<TestResults> {
-  var items = [
-    'Filter by year',
-    'Item 2',
-    'Item 3',
-    'Item 4',
-    'Item 5',
-  ];
-  String dropdownvalue = 'Filter by year';
 
   int index = 1;
+  DateTimeRange dateRange = DateTimeRange(start: DateTime.now(), end: DateTime.now());
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        decoration: const BoxDecoration(
-          color: kBackgroundColor,
-        ),
+    final start = dateRange.start;
+    String startMonthName = determineMonthName(start.month);
+    final end = dateRange.end;
+    String endMonthName = determineMonthName(end.month);
+    return Scaffold(
+      body: SafeArea(
         child: Container(
-          margin: EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(30),
+          decoration: const BoxDecoration(
+            color: kBackgroundColor,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: double.infinity,
-                margin: const EdgeInsets.fromLTRB(20, 25, 20, 5),
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      width: 1.0,
-                      color: Colors.grey,
+          child: Container(
+            margin: EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: ListView(
+             // crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.fromLTRB(20, 25, 20, 5),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        width: 1.0,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
+                  child: const Text(
+                    'New',
+                    style: kSmallRedText,
+                  ),
                 ),
-                child: const Text(
-                  'New',
-                  style: kSmallRedText,
-                ),
-              ),
-              Expanded(
-                child: SingleChildScrollView(
+                //todo: get a list of test results within this month
+                SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: resultInitializer(),
                   ),
                 ),
-              ),
-              Container(
-                width: double.infinity,
-                margin: const EdgeInsets.fromLTRB(20, 5, 20, 10),
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      width: 1.0,
-                      color: Colors.grey,
+                Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.fromLTRB(20, 5, 20, 10),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        width: 1.0,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
+                  child: const Text(
+                    'Older',
+                    style: kSmallGreenText,
+                  ),
                 ),
-                child: const Text(
-                  'This Year',
-                  style: kSmallGreenText,
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(20, 0, 10, 10),
+                  child: Text(
+                    'Select the duration for which you want previous results displayed.',
+                    style: kMiniGreyText,
+                  ),
                 ),
-              ),
-              Expanded(
-                child: ListView(
-                  /*children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 0, 10),
-                      child: Text(
-                        'MAY',
-                        style: kMiniGreyText,
-                      ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    OutlinedButton(
+                        onPressed: pickDateRange,
+                        child: const Text('Pick Date Range')),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('Start Date: ', style: kMiniBlackTextBold,),
+                        Text('${start.day} $startMonthName ${start.year}', style: kMiniBlackText,),
+                      ],
                     ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 10,
-                            ),
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                              ),
-                              onPressed: (){},
-                              child: LabResultHolder(
-                                  heading: 'Heading',
-                                  date: '2nd September 2022',
-                                  labName: 'Hospital and Lab Name'),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                              ),
-                              onPressed: (){},
-                              child: LabResultHolder(
-                                  heading: 'Heading',
-                                  date: '2nd September 2022',
-                                  labName: 'Hospital and Lab Name'),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                              ),
-                              onPressed: (){},
-                              child: LabResultHolder(
-                                  heading: 'Heading',
-                                  date: '2nd September 2022',
-                                  labName: 'Hospital and Lab Name'),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                              ),
-                              onPressed: (){},
-                              child: LabResultHolder(
-                                  heading: 'Heading',
-                                  date: '2nd September 2022',
-                                  labName: 'Hospital and Lab Name'),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 0, 10),
-                      child: Text(
-                        'FEB',
-                        style: kMiniGreyText,
-                      ),
-                    ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 10,
-                            ),
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                              ),
-                              onPressed: (){},
-                              child: LabResultHolder(
-                                  heading: 'Heading',
-                                  date: '2nd September 2022',
-                                  labName: 'Hospital and Lab Name'),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                              ),
-                              onPressed: (){},
-                              child: LabResultHolder(
-                                  heading: 'Heading',
-                                  date: '2nd September 2022',
-                                  labName: 'Hospital and Lab Name'),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                              ),
-                              onPressed: (){},
-                              child: LabResultHolder(
-                                  heading: 'Heading',
-                                  date: '2nd September 2022',
-                                  labName: 'Hospital and Lab Name'),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                              ),
-                              onPressed: (){},
-                              child: LabResultHolder(
-                                  heading: 'Heading',
-                                  date: '2nd September 2022',
-                                  labName: 'Hospital and Lab Name'),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                          ],
-                        ),
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('End Date: ', style: kMiniBlackTextBold,),
+                        Text('${end.day} $endMonthName ${end.year}', style: kMiniBlackText,),
+                      ],
                     )
-                  ],*/
-                  children: yearResultGenerator(),
+                  ],
                 ),
-              ),
-              Container(
-                width: double.infinity,
-                margin: const EdgeInsets.fromLTRB(20, 25, 20, 10),
-                padding:
-                const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      width: 1.0,
-                      color: Colors.grey,
-                    ),
-                  ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(),
                 ),
-                child: const Text(
-                  'Older',
-                  style: kSmallGreenText,
-                ),
-              ),
-              Material(
-                borderRadius: BorderRadius.circular(10),
-                child: Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-                    width: 300,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
-                    ),
-                    child: DropdownButton(
-                      borderRadius: BorderRadius.circular(10),
-                      value: dropdownvalue,
-                      icon: const Icon(Icons.keyboard_arrow_down),
-                      items: items.map((String items) {
-                        return DropdownMenuItem(
-                          value: items,
-                          child: Text(items),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownvalue = newValue!;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
+  Future pickDateRange() async {
+    DateTimeRange? newRange = await showDateRangePicker(
+      context: context,
+      initialDateRange: dateRange,
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now(),
+    );
+    if (newRange == null)
+      return;
+    else {
+      setState(() {
+        dateRange = newRange;
+      });
+    }
+  }
 }
+
 
 //TODO: Replace this with dynamic data from the database
 List<Widget> resultInitializer (){
@@ -301,7 +148,7 @@ List<Widget> resultInitializer (){
       TextButton(
         onPressed: (){},
         style: TextButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5.0),
+          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 5.0),
         ),
         child: LabResultHolder(heading: heading, date: date, labName: labName,
         ),
@@ -312,6 +159,7 @@ List<Widget> resultInitializer (){
 }
 //TODO: get results from database within the time limit of an year
 //TODO: Sort them into different lists according to month and display these lists on screen
+
 List <Widget> yearResultGenerator(){
   List <Widget> resultList = [
 
@@ -357,6 +205,5 @@ List <Widget> yearResultGenerator(){
       );
     }
   }
-
   return resultList;
 }

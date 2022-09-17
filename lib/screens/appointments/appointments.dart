@@ -10,14 +10,17 @@ class Appointments extends StatefulWidget {
 
 class _AppointmentsState extends State<Appointments> {
   final CalendarController _controller = CalendarController();
-  var items = [
-    'Hospital',
-    'Item 2',
-    'Item 3',
-    'Item 4',
-    'Item 5',
+  var hospitalList = [
+    'Select...',
+    'Hospital 1',
+    'Hospital 2',
   ];
-  String dropdownvalue = 'Hospital';
+  var items = [
+    'Select...',
+    'Hospital 1',
+    'Hospital 2',
+  ];
+  String dropdownvalue = 'Select...';
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -66,10 +69,10 @@ class _AppointmentsState extends State<Appointments> {
                                 borderRadius: BorderRadius.circular(10),
                                 value: dropdownvalue,
                                 icon: const Icon(Icons.keyboard_arrow_down),
-                                items: items.map((String items) {
+                                items: hospitalList.map((String hospitalList) {
                                   return DropdownMenuItem(
-                                    value: items,
-                                    child: Text(items),
+                                    value: hospitalList,
+                                    child: Text(hospitalList),
                                   );
                                 }).toList(),
                                 onChanged: (String? newValue) {
