@@ -4,56 +4,55 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Appointment {
-  final String id;
+  final String hid;
   final String puid;
   final String duid;
-  final DateTime appointmentTimestamp;
-  final String appointmentStatus;
+  final Timestamp timestamp;
+  final String status;
 
   Appointment(
-      {required this.id,
+      {required this.hid,
       required this.puid,
       required this.duid,
-      required this.appointmentTimestamp,
-      required this.appointmentStatus});
+      required this.timestamp,
+      required this.status});
 
   //copywith method
   Appointment copyWith({
-    String? id,
+    String? hid,
     String? puid,
     String? duid,
-    String? appointmentTime,
-    String? appointmentDate,
-    String? appointmentStatus,
+    Timestamp? timestamp,
+    String? status,
   }) {
     return Appointment(
-      id: id ?? this.id,
+      hid: hid ?? this.hid,
       puid: puid ?? this.puid,
       duid: duid ?? this.duid,
-      appointmentTimestamp: appointmentTimestamp,
-      appointmentStatus: appointmentStatus ?? this.appointmentStatus,
+      timestamp: timestamp ?? this.timestamp,
+      status: status ?? this.status,
     );
   }
 
   //fromjson method
   factory Appointment.fromJson(Map<String, dynamic> json) {
     return Appointment(
-      id: json['id'],
+      hid: json['hid'],
       puid: json['puid'],
       duid: json['duid'],
-      appointmentTimestamp: json['appointmentTimestamp'],
-      appointmentStatus: json['appointmentStatus'],
+      timestamp: json['timestamp'],
+      status: json['status'],
     );
   }
 
   //map method
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'hid': hid,
       'puid': puid,
       'duid': duid,
-      'appointmentTimestamp': appointmentTimestamp,
-      'appointmentStatus': appointmentStatus,
+      'timestamp': timestamp,
+      'status': status,
     };
   }
 
@@ -63,7 +62,7 @@ class Appointment {
   //tostring method
   @override
   String toString() {
-    return 'Appointment(id: $id, puid: $puid, duid: $duid, appointmentTimestamp: $appointmentTimestamp, appointmentStatus: $appointmentStatus)';
+    return 'Appointment(hid: $hid, puid: $puid, duid: $duid, timestamp: $timestamp, status: $status)';
   }
 
   //equality operator
@@ -72,43 +71,61 @@ class Appointment {
     if (identical(this, other)) return true;
 
     return other is Appointment &&
-        other.id == id &&
+        other.hid == hid &&
         other.puid == puid &&
         other.duid == duid &&
-        other.appointmentTimestamp == appointmentTimestamp &&
-        other.appointmentStatus == appointmentStatus;
+        other.timestamp == timestamp &&
+        other.status == status;
   }
 
   //hashcode method
   @override
   int get hashCode {
-    return id.hashCode ^
+    return hid.hashCode ^
         puid.hashCode ^
         duid.hashCode ^
-        appointmentTimestamp.hashCode ^
-        appointmentStatus.hashCode;
+        timestamp.hashCode ^
+        status.hashCode;
   }
 
   //fromfirestore method
   factory Appointment.fromFirestore(Map<String, dynamic> firestore) {
     return Appointment(
-      id: firestore['id'],
+      hid: firestore['hid'],
       puid: firestore['puid'],
       duid: firestore['duid'],
-      appointmentTimestamp: firestore['appointmentTimestamp'],
-      appointmentStatus: firestore['appointmentStatus'],
+      timestamp: firestore['timestamp'],
+      status: firestore['status'],
     );
   }
 
   //tofirestore method
   Map<String, dynamic> toFirestore() {
     return {
-      'id': id,
+      'hid': hid,
       'puid': puid,
       'duid': duid,
-      'appointmentTimestamp': appointmentTimestamp,
-      'appointmentStatus': appointmentStatus,
+      'timestamp': timestamp,
+      'status': status,
     };
+  }
+
+  //get timestamp as datetime
+  DateTime get timestampAsDateTime => timestamp.toDate();
+
+  //get appointment date
+  String getAppointmentDate() {
+    return timestamp.toDate().toString().substring(0, 10);
+  }
+
+  //get appointment date in dd/mm/yyyy format
+  String getAppointmentDateInDDMMYYYYFormat() {
+    return '${timestamp.toDate().toString().substring(8, 10)}/${timestamp.toDate().toString().substring(5, 7)}/${timestamp.toDate().toString().substring(0, 4)}';
+  }
+
+  //get appointment time
+  String getAppointmentTime() {
+    return timestamp.toDate().toString().substring(11, 16);
   }
 
   //fetch appointments method
@@ -152,10 +169,10 @@ class Appointment {
   }
 
   //fetch appointment method
-  Future<Appointment> fetchAppointment(String id) async {
+  Future<Appointment> fetchAppointment(String hid) async {
     var result = await FirebaseFirestore.instance
         .collection('appointments')
-        .doc(id)
+        .doc(hid)
         .get();
     var data = result.data();
     return Appointment.fromFirestore(data!);
@@ -165,7 +182,7 @@ class Appointment {
   Future<void> addAppointment(Appointment appointment) async {
     await FirebaseFirestore.instance
         .collection('appointments')
-        .doc(appointment.id)
+        .doc(appointment.hid)
         .set(appointment.toMap());
   }
 
@@ -173,15 +190,15 @@ class Appointment {
   Future<void> updateAppointment(Appointment appointment) async {
     await FirebaseFirestore.instance
         .collection('appointments')
-        .doc(appointment.id)
+        .doc(appointment.hid)
         .update(appointment.toMap());
   }
 
   //delete appointment method
-  Future<void> deleteAppointment(String id) async {
+  Future<void> deleteAppointment(String hid) async {
     await FirebaseFirestore.instance
         .collection('appointments')
-        .doc(id)
+        .doc(hid)
         .delete();
   }
 
@@ -310,6 +327,74 @@ class Appointment {
         .where('date', isEqualTo: date)
         .get();
     return result.docs.length;
+  }
+
+  //get patient appointments between a date range
+  Future<List<Appointment>> getPatientAppointmentsBetweenDateRange(
+      String patientId, DateTime startDate, DateTime endDate) async {
+    var result = await FirebaseFirestore.instance
+        .collection('appointments')
+        .where('puid', isEqualTo: patientId)
+        .where('date', isGreaterThanOrEqualTo: startDate)
+        .where('date', isLessThanOrEqualTo: endDate)
+        .get();
+    List<Appointment> appointments = [];
+    for (var doc in result.docs) {
+      var data = doc.data();
+      appointments.add(Appointment.fromFirestore(data));
+    }
+    return appointments;
+  }
+
+  //get doctor appointments between a date range
+  Future<List<Appointment>> getDoctorAppointmentsBetweenDateRange(
+      String doctorId, DateTime startDate, DateTime endDate) async {
+    var result = await FirebaseFirestore.instance
+        .collection('appointments')
+        .where('duid', isEqualTo: doctorId)
+        .where('date', isGreaterThanOrEqualTo: startDate)
+        .where('date', isLessThanOrEqualTo: endDate)
+        .get();
+    List<Appointment> appointments = [];
+    for (var doc in result.docs) {
+      var data = doc.data();
+      appointments.add(Appointment.fromFirestore(data));
+    }
+    return appointments;
+  }
+
+  //get latest patient appointments
+  Future<List<Appointment>> getLatestPatientAppointments(
+      String patientId, int limit) async {
+    var result = await FirebaseFirestore.instance
+        .collection('appointments')
+        .where('puid', isEqualTo: patientId)
+        .orderBy('date', descending: true)
+        .limit(limit)
+        .get();
+    List<Appointment> appointments = [];
+    for (var doc in result.docs) {
+      var data = doc.data();
+      appointments.add(Appointment.fromFirestore(data));
+    }
+    return appointments;
+  }
+
+  //get latest doctor appointments
+  Future<List<Appointment>> getLatestDoctorAppointments(
+      String doctorId, int limit) async {
+    var result = await FirebaseFirestore.instance
+        .collection('appointments')
+        .where('duid', isEqualTo: doctorId)
+        .orderBy('date', descending: true)
+        .limit(limit)
+        .get();
+    List<Appointment> appointments = [];
+    for (var doc in result.docs) {
+      var data = doc.data();
+      appointments.add(Appointment.fromFirestore(data));
+    }
+    return appointments;
   }
 
   //get appointment count by date and status method
