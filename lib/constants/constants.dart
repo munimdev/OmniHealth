@@ -129,3 +129,31 @@ const kMiniGreyText = TextStyle(
   fontSize: 14,
   decoration: TextDecoration.none,
 );
+const kMiniBlackText = TextStyle(
+  fontFamily: 'Outfit',
+  fontWeight: FontWeight.w400,
+  color: Colors.black,
+  fontSize: 14,
+  decoration: TextDecoration.none,
+);
+const kMiniMintGreenTextBold = TextStyle(
+  fontFamily: 'Outfit',
+  fontWeight: FontWeight.w700,
+  color: kMintGreen,
+  fontSize: 14,
+  decoration: TextDecoration.none,
+);
+const kMiniAppleGreenText = TextStyle(
+  fontFamily: 'Outfit',
+  fontWeight: FontWeight.w400,
+  color: kAppleGreen,
+  fontSize: 14,
+  decoration: TextDecoration.none,
+);
+const kMiniBlackTextBold = TextStyle(
+  fontFamily: 'Outfit',
+  fontWeight: FontWeight.w700,
+  color: Colors.black,
+  fontSize: 14,
+  decoration: TextDecoration.none,
+);

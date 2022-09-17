@@ -6,6 +6,7 @@ import '../../Components/dashboard_widgets.dart';
 import '../../Components/profile_card.dart';
 import '../appointments/appointments.dart';
 import '../testresults/test_results.dart';
+import '../medicalHistory/medical_history.dart';
 import '../../models/patients.dart';
 
 class Home extends StatefulWidget {
@@ -42,7 +43,8 @@ class _Home extends State<Home> {
                       size: 30.0,
                     ),
                     style: ButtonStyle(
-                      padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
+                      padding: MaterialStateProperty.all<EdgeInsets>(
+                          EdgeInsets.zero),
                     ),
                   ),
                   TextButton(
@@ -50,7 +52,8 @@ class _Home extends State<Home> {
                       print('bell pressed');
                     },
                     style: ButtonStyle(
-                      padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
+                      padding: MaterialStateProperty.all<EdgeInsets>(
+                          EdgeInsets.zero),
                     ),
                     child: const Icon(
                       Icons.notifications,
@@ -80,11 +83,11 @@ class _Home extends State<Home> {
                     height: 60,
                   ),
                   TextButton(
-                    onPressed: (){
+                    onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context){
+                          builder: (context) {
                             return Appointments();
                           },
                         ),
@@ -102,7 +105,7 @@ class _Home extends State<Home> {
                     children: [
                       SizedBox(width: 10),
                       TextButton(
-                        onPressed: (){},
+                        onPressed: () {},
                         child: const DashboardWidgetHorizontal(
                           title: 'Diagnosis\nDetails',
                           icon: Icon(
@@ -112,7 +115,16 @@ class _Home extends State<Home> {
                         ),
                       ),
                       TextButton(
-                        onPressed: (){},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return MedicalHistory();
+                              },
+                            ),
+                          );
+                        },
                         child: const DashboardWidgetHorizontal(
                           title: 'Medical\nHistory',
                           icon: Icon(
@@ -124,14 +136,12 @@ class _Home extends State<Home> {
                     ],
                   ),
                   TextButton(
-                    onPressed: (){
+                    onPressed: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context){
-                                return TestResults();
-                              }
-                          ),
+                        context,
+                        MaterialPageRoute(builder: (context) {
+                          return TestResults();
+                        }),
                       );
                     },
                     child: const DashboardWidgetVertical(
@@ -143,11 +153,11 @@ class _Home extends State<Home> {
                     ),
                   ),
                   TextButton(
-                    onPressed: (){
-
-                    },
-                    child: const DashboardWidgetVertical(title: 'Complaints',
-                      icon: Icon(Icons.article,
+                    onPressed: () {},
+                    child: const DashboardWidgetVertical(
+                      title: 'Complaints',
+                      icon: Icon(
+                        Icons.article,
                         color: Colors.white,
                       ),
                     ),
