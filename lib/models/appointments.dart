@@ -148,7 +148,7 @@ class Appointment {
     try {
       await FirebaseFirestore.instance
           .collection('appointments')
-          .doc(hid)
+          .doc(id)
           .update(toFirestore());
     } catch (e) {
       print(e);
