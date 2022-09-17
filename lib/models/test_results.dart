@@ -120,4 +120,89 @@ class TestResults {
     }
     return testResults;
   }
+
+  //get patient test results by test type from firestore
+  static Future<List<TestResults>> getPatientTestResultsByTestType(
+      String puid, DateTime testType) async {
+    List<TestResults> testResults = [];
+    try {
+      final QuerySnapshot result = await FirebaseFirestore.instance
+          .collection('results')
+          .where('puid', isEqualTo: puid)
+          .where('testType', isEqualTo: testType)
+          .get();
+      final List<QueryDocumentSnapshot> documents = result.docs;
+      for (var document in documents) {
+        testResults
+            .add(TestResults.fromJson(document.data() as Map<String, dynamic>));
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    return testResults;
+  }
+
+  //get patient test results between dates from firestore
+  static Future<List<TestResults>> getPatientTestResultsBetweenDates(
+      String puid, DateTime startDate, DateTime endDate) async {
+    List<TestResults> testResults = [];
+    try {
+      final QuerySnapshot result = await FirebaseFirestore.instance
+          .collection('results')
+          .where('puid', isEqualTo: puid)
+          .where('testDate', isGreaterThanOrEqualTo: startDate)
+          .where('testDate', isLessThanOrEqualTo: endDate)
+          .get();
+      final List<QueryDocumentSnapshot> documents = result.docs;
+      for (var document in documents) {
+        testResults
+            .add(TestResults.fromJson(document.data() as Map<String, dynamic>));
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    return testResults;
+  }
+
+  //get patient test results after date from firestore
+  static Future<List<TestResults>> getPatientTestResultsAfterDate(
+      String puid, DateTime startDate) async {
+    List<TestResults> testResults = [];
+    try {
+      final QuerySnapshot result = await FirebaseFirestore.instance
+          .collection('results')
+          .where('puid', isEqualTo: puid)
+          .where('testDate', isGreaterThanOrEqualTo: startDate)
+          .get();
+      final List<QueryDocumentSnapshot> documents = result.docs;
+      for (var document in documents) {
+        testResults
+            .add(TestResults.fromJson(document.data() as Map<String, dynamic>));
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    return testResults;
+  }
+
+  //get patient test results after date from firestore
+  static Future<List<TestResults>> getPatientTestResultsBeforeDate(
+      String puid, DateTime endDate) async {
+    List<TestResults> testResults = [];
+    try {
+      final QuerySnapshot result = await FirebaseFirestore.instance
+          .collection('results')
+          .where('puid', isEqualTo: puid)
+          .where('testDate', isLessThanOrEqualTo: endDate)
+          .get();
+      final List<QueryDocumentSnapshot> documents = result.docs;
+      for (var document in documents) {
+        testResults
+            .add(TestResults.fromJson(document.data() as Map<String, dynamic>));
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    return testResults;
+  }
 }
