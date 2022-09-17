@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Appointment {
+  final String id;
   final String hid;
   final String puid;
   final String duid;
@@ -11,7 +12,8 @@ class Appointment {
   final String status;
 
   Appointment(
-      {required this.hid,
+      {required this.id,
+      required this.hid,
       required this.puid,
       required this.duid,
       required this.timestamp,
@@ -19,6 +21,7 @@ class Appointment {
 
   //copywith method
   Appointment copyWith({
+    String? id,
     String? hid,
     String? puid,
     String? duid,
@@ -26,6 +29,7 @@ class Appointment {
     String? status,
   }) {
     return Appointment(
+      id: id ?? this.id,
       hid: hid ?? this.hid,
       puid: puid ?? this.puid,
       duid: duid ?? this.duid,
@@ -37,6 +41,7 @@ class Appointment {
   //fromjson method
   factory Appointment.fromJson(Map<String, dynamic> json) {
     return Appointment(
+      id: json['id'],
       hid: json['hid'],
       puid: json['puid'],
       duid: json['duid'],
@@ -48,6 +53,7 @@ class Appointment {
   //map method
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'hid': hid,
       'puid': puid,
       'duid': duid,
@@ -62,7 +68,7 @@ class Appointment {
   //tostring method
   @override
   String toString() {
-    return 'Appointment(hid: $hid, puid: $puid, duid: $duid, timestamp: $timestamp, status: $status)';
+    return 'Appointment(id: $id, hid: $hid, puid: $puid, duid: $duid, timestamp: $timestamp, status: $status)';
   }
 
   //equality operator
@@ -71,6 +77,7 @@ class Appointment {
     if (identical(this, other)) return true;
 
     return other is Appointment &&
+        other.id == id &&
         other.hid == hid &&
         other.puid == puid &&
         other.duid == duid &&
@@ -78,19 +85,10 @@ class Appointment {
         other.status == status;
   }
 
-  //hashcode method
-  @override
-  int get hashCode {
-    return hid.hashCode ^
-        puid.hashCode ^
-        duid.hashCode ^
-        timestamp.hashCode ^
-        status.hashCode;
-  }
-
   //fromfirestore method
   factory Appointment.fromFirestore(Map<String, dynamic> firestore) {
     return Appointment(
+      id: firestore['id'],
       hid: firestore['hid'],
       puid: firestore['puid'],
       duid: firestore['duid'],
@@ -102,6 +100,7 @@ class Appointment {
   //tofirestore method
   Map<String, dynamic> toFirestore() {
     return {
+      'id': id,
       'hid': hid,
       'puid': puid,
       'duid': duid,
@@ -118,6 +117,42 @@ class Appointment {
   //get appointment time
   String getAppointmentTime() {
     return timestamp.toLocal().toString().split(' ')[1];
+  }
+
+  //add appointment to firestore
+  Future<void> addAppointmentToFirestore() async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('appointments')
+          .doc(id)
+          .set(toFirestore());
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  //delete appointment from firestore
+  Future<void> deleteAppointmentFromFirestore() async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('appointments')
+          .doc(id)
+          .delete();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  //update appointment in firestore
+  Future<void> updateAppointmentInFirestore() async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('appointments')
+          .doc(id)
+          .update(toFirestore());
+    } catch (e) {
+      print(e);
+    }
   }
 }
 

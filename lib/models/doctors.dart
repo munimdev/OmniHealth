@@ -166,299 +166,324 @@ class Doctor {
   //convert json to doctor
   factory Doctor.fromJson(String source) => Doctor.fromMap(json.decode(source));
 
-  //fetch doctor from cloud firestore
-  static Future<Doctor> fetchDoctor(String uid) async {
-    Doctor doctor = Doctor(
-        uid: '',
-        hospitalUid: '',
-        fname: '',
-        lname: '',
-        speciality: '',
-        address: [],
-        experience: '',
-        hourlyFee: '');
+  //convert doctor to firestore document
+  factory Doctor.fromFirestore(DocumentSnapshot doc) {
+    Map data = doc.data() as Map;
+    return Doctor(
+        uid: doc.id,
+        hospitalUid: data['hospitalUid'],
+        fname: data['fname'],
+        lname: data['lname'],
+        phone: data['phone'],
+        email: data['email'],
+        speciality: data['speciality'],
+        address: List<String>.from(data['address']),
+        experience: data['experience'],
+        hourlyFee: data['hourlyFee']);
+  }
+
+  //add doctor to firestore
+  Future<void> addDoctor() async {
     await FirebaseFirestore.instance
         .collection('doctors')
         .doc(uid)
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        doctor =
-            Doctor.fromMap(documentSnapshot.data() as Map<String, dynamic>);
-      }
-    });
-    return doctor;
+        .set(toMap());
   }
 
-  //get all doctors with speciality
-  static Future<List<Doctor>> getAllDoctorsWithSpeciality(
-      String speciality) async {
-    List<Doctor> doctors = [];
+  //update doctor in firestore
+  Future<void> updateDoctor() async {
     await FirebaseFirestore.instance
         .collection('doctors')
-        .where('speciality', isEqualTo: speciality)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      for (var doc in querySnapshot.docs) {
-        doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
-      }
-    });
-    return doctors;
+        .doc(uid)
+        .update(toMap());
   }
 
-  //get all doctors
-  static Future<List<Doctor>> getAllDoctors() async {
-    List<Doctor> doctors = [];
-    await FirebaseFirestore.instance
-        .collection('doctors')
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      for (var doc in querySnapshot.docs) {
-        doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
-      }
-    });
-    return doctors;
+  //delete doctor from firestore
+  Future<void> deleteDoctor() async {
+    await FirebaseFirestore.instance.collection('doctors').doc(uid).delete();
   }
 
-  //get all doctors under a hospital
-  static Future<List<Doctor>> getAllDoctorsUnderHospital(
-      String hospitalUid) async {
-    List<Doctor> doctors = [];
-    await FirebaseFirestore.instance
-        .collection('doctors')
-        .where('hospitalUid', isEqualTo: hospitalUid)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      for (var doc in querySnapshot.docs) {
-        doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
-      }
-    });
-    return doctors;
+  //check if doctor exists in firestore
+  Future<bool> exists() async {
+    DocumentSnapshot doc =
+        await FirebaseFirestore.instance.collection('doctors').doc(uid).get();
+    return doc.exists;
   }
 
-  //get all doctors under a hospital with speciality
-  static Future<List<Doctor>> getAllDoctorsUnderHospitalWithSpeciality(
-      String hospitalUid, String speciality) async {
-    List<Doctor> doctors = [];
-    await FirebaseFirestore.instance
-        .collection('doctors')
-        .where('hospitalUid', isEqualTo: hospitalUid)
-        .where('speciality', isEqualTo: speciality)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      for (var doc in querySnapshot.docs) {
-        doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
-      }
-    });
-    return doctors;
+  //update doctor if not exists
+  Future<void> updateIfNotExists() async {
+    if (!(await exists())) {
+      await addDoctor();
+    }
   }
+}
 
-  //get doctors that have fee below a certain amount
-  static Future<List<Doctor>> getAllDoctorsWithFeeLessThan(int amount) async {
-    List<Doctor> doctors = [];
-    await FirebaseFirestore.instance
-        .collection('doctors')
-        .where('hourlyFee', isLessThan: amount)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      for (var doc in querySnapshot.docs) {
-        doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
-      }
-    });
-    return doctors;
-  }
+//get doctor from firestore
+Future<Doctor> getDoctor(String uid) async {
+  DocumentSnapshot doc =
+      await FirebaseFirestore.instance.collection('doctors').doc(uid).get();
+  return Doctor.fromFirestore(doc);
+}
 
-  //get doctors that have fee above a certain amount
-  static Future<List<Doctor>> getAllDoctorsWithFeeGreaterThan(
-      int amount) async {
-    List<Doctor> doctors = [];
-    await FirebaseFirestore.instance
-        .collection('doctors')
-        .where('hourlyFee', isGreaterThan: amount)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      for (var doc in querySnapshot.docs) {
-        doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
-      }
-    });
-    return doctors;
+//get all doctors with speciality
+Future<List<Doctor>> getDoctorsWithSpeciality(String speciality) async {
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection('doctors')
+      .where('speciality', isEqualTo: speciality)
+      .get();
+  List<Doctor> doctors = [];
+  for (DocumentSnapshot doc in querySnapshot.docs) {
+    doctors.add(Doctor.fromFirestore(doc));
   }
+  return doctors;
+}
 
-  //get all doctors
-  static Future<List<Doctor>> getAllDoctorsWithFeeBetween(
-      int min, int max) async {
-    List<Doctor> doctors = [];
-    await FirebaseFirestore.instance
-        .collection('doctors')
-        .where('hourlyFee', isGreaterThanOrEqualTo: min)
-        .where('hourlyFee', isLessThanOrEqualTo: max)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      for (var doc in querySnapshot.docs) {
-        doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
-      }
-    });
-    return doctors;
+//get all doctors
+Future<List<Doctor>> getAllDoctors() async {
+  QuerySnapshot querySnapshot =
+      await FirebaseFirestore.instance.collection('doctors').get();
+  List<Doctor> doctors = [];
+  for (DocumentSnapshot doc in querySnapshot.docs) {
+    doctors.add(Doctor.fromFirestore(doc));
   }
+  return doctors;
+}
 
-  //get list of all doctors with speciality and fee less than
-  static Future<List<Doctor>> getAllDoctorsWithSpecialityAndFeeLessThan(
-      String speciality, int amount) async {
-    List<Doctor> doctors = [];
-    await FirebaseFirestore.instance
-        .collection('doctors')
-        .where('speciality', isEqualTo: speciality)
-        .where('hourlyFee', isLessThan: amount)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      for (var doc in querySnapshot.docs) {
-        doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
-      }
-    });
-    return doctors;
-  }
+//get all doctors under a hospital
+Future<List<Doctor>> getAllDoctorsUnderHospital(String hospitalUid) async {
+  List<Doctor> doctors = [];
+  await FirebaseFirestore.instance
+      .collection('doctors')
+      .where('hospitalUid', isEqualTo: hospitalUid)
+      .get()
+      .then((QuerySnapshot querySnapshot) {
+    for (var doc in querySnapshot.docs) {
+      doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
+    }
+  });
+  return doctors;
+}
 
-  //get list of all doctors with speciality and fee greater than
-  static Future<List<Doctor>> getAllDoctorsWithSpecialityAndFeeGreaterThan(
-      String speciality, int amount) async {
-    List<Doctor> doctors = [];
-    await FirebaseFirestore.instance
-        .collection('doctors')
-        .where('speciality', isEqualTo: speciality)
-        .where('hourlyFee', isGreaterThan: amount)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      for (var doc in querySnapshot.docs) {
-        doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
-      }
-    });
-    return doctors;
-  }
+//get all doctors under a hospital with speciality
+Future<List<Doctor>> getAllDoctorsUnderHospitalWithSpeciality(
+    String hospitalUid, String speciality) async {
+  List<Doctor> doctors = [];
+  await FirebaseFirestore.instance
+      .collection('doctors')
+      .where('hospitalUid', isEqualTo: hospitalUid)
+      .where('speciality', isEqualTo: speciality)
+      .get()
+      .then((QuerySnapshot querySnapshot) {
+    for (var doc in querySnapshot.docs) {
+      doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
+    }
+  });
+  return doctors;
+}
 
-  //get list of all doctors with speciality and fee in range
-  static Future<List<Doctor>> getAllDoctorsWithSpecialityAndFeeBetween(
-      String speciality, int min, int max) async {
-    List<Doctor> doctors = [];
-    await FirebaseFirestore.instance
-        .collection('doctors')
-        .where('speciality', isEqualTo: speciality)
-        .where('hourlyFee', isGreaterThanOrEqualTo: min)
-        .where('hourlyFee', isLessThanOrEqualTo: max)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      for (var doc in querySnapshot.docs) {
-        doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
-      }
-    });
-    return doctors;
-  }
+//get doctors that have fee below a certain amount
+Future<List<Doctor>> getAllDoctorsWithFeeLessThan(int amount) async {
+  List<Doctor> doctors = [];
+  await FirebaseFirestore.instance
+      .collection('doctors')
+      .where('hourlyFee', isLessThan: amount)
+      .get()
+      .then((QuerySnapshot querySnapshot) {
+    for (var doc in querySnapshot.docs) {
+      doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
+    }
+  });
+  return doctors;
+}
 
-  //get list of all doctors with speciality and fee in range
-  static Future<List<Doctor>> getAllDoctorsWithFeeLessThanAndSpecialityBetween(
-      int amount, String minSpeciality, String maxSpeciality) async {
-    List<Doctor> doctors = [];
-    await FirebaseFirestore.instance
-        .collection('doctors')
-        .where('hourlyFee', isLessThan: amount)
-        .where('speciality', isGreaterThanOrEqualTo: minSpeciality)
-        .where('speciality', isLessThanOrEqualTo: maxSpeciality)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      for (var doc in querySnapshot.docs) {
-        doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
-      }
-    });
-    return doctors;
-  }
+//get doctors that have fee above a certain amount
+Future<List<Doctor>> getAllDoctorsWithFeeGreaterThan(int amount) async {
+  List<Doctor> doctors = [];
+  await FirebaseFirestore.instance
+      .collection('doctors')
+      .where('hourlyFee', isGreaterThan: amount)
+      .get()
+      .then((QuerySnapshot querySnapshot) {
+    for (var doc in querySnapshot.docs) {
+      doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
+    }
+  });
+  return doctors;
+}
 
-  //get list of all doctors with speciality and fee in range
-  static Future<List<Doctor>>
-      getAllDoctorsWithFeeGreaterThanAndSpecialityBetween(
-          int amount, String minSpeciality, String maxSpeciality) async {
-    List<Doctor> doctors = [];
-    await FirebaseFirestore.instance
-        .collection('doctors')
-        .where('hourlyFee', isGreaterThan: amount)
-        .where('speciality', isGreaterThanOrEqualTo: minSpeciality)
-        .where('speciality', isLessThanOrEqualTo: maxSpeciality)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      for (var doc in querySnapshot.docs) {
-        doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
-      }
-    });
-    return doctors;
-  }
+//get all doctors
+Future<List<Doctor>> getAllDoctorsWithFeeBetween(int min, int max) async {
+  List<Doctor> doctors = [];
+  await FirebaseFirestore.instance
+      .collection('doctors')
+      .where('hourlyFee', isGreaterThanOrEqualTo: min)
+      .where('hourlyFee', isLessThanOrEqualTo: max)
+      .get()
+      .then((QuerySnapshot querySnapshot) {
+    for (var doc in querySnapshot.docs) {
+      doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
+    }
+  });
+  return doctors;
+}
 
-  //get all doctors of a city
-  static Future<List<Doctor>> getAllDoctorsOfCity(String city) async {
-    List<Doctor> doctors = [];
-    await FirebaseFirestore.instance
-        .collection('doctors')
-        .where('city', isEqualTo: city)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      for (var doc in querySnapshot.docs) {
-        doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
-      }
-    });
-    return doctors;
-  }
+//get list of all doctors with speciality and fee less than
+Future<List<Doctor>> getAllDoctorsWithSpecialityAndFeeLessThan(
+    String speciality, int amount) async {
+  List<Doctor> doctors = [];
+  await FirebaseFirestore.instance
+      .collection('doctors')
+      .where('speciality', isEqualTo: speciality)
+      .where('hourlyFee', isLessThan: amount)
+      .get()
+      .then((QuerySnapshot querySnapshot) {
+    for (var doc in querySnapshot.docs) {
+      doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
+    }
+  });
+  return doctors;
+}
 
-  //get all doctors of a city with fee less than
-  static Future<List<Doctor>> getAllDoctorsOfCityWithFeeLessThan(
-      String city, int amount) async {
-    List<Doctor> doctors = [];
-    await FirebaseFirestore.instance
-        .collection('doctors')
-        .where('city', isEqualTo: city)
-        .where('hourlyFee', isLessThan: amount)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      for (var doc in querySnapshot.docs) {
-        doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
-      }
-    });
-    return doctors;
-  }
+//get list of all doctors with speciality and fee greater than
+Future<List<Doctor>> getAllDoctorsWithSpecialityAndFeeGreaterThan(
+    String speciality, int amount) async {
+  List<Doctor> doctors = [];
+  await FirebaseFirestore.instance
+      .collection('doctors')
+      .where('speciality', isEqualTo: speciality)
+      .where('hourlyFee', isGreaterThan: amount)
+      .get()
+      .then((QuerySnapshot querySnapshot) {
+    for (var doc in querySnapshot.docs) {
+      doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
+    }
+  });
+  return doctors;
+}
 
-  //get all doctors of a city with fee greater than
-  static Future<List<Doctor>> getAllDoctorsOfCityWithFeeGreaterThan(
-      String city, int amount) async {
-    List<Doctor> doctors = [];
-    await FirebaseFirestore.instance
-        .collection('doctors')
-        .where('city', isEqualTo: city)
-        .where('hourlyFee', isGreaterThan: amount)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      for (var doc in querySnapshot.docs) {
-        doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
-      }
-    });
-    return doctors;
-  }
+//get list of all doctors with speciality and fee in range
+Future<List<Doctor>> getAllDoctorsWithSpecialityAndFeeBetween(
+    String speciality, int min, int max) async {
+  List<Doctor> doctors = [];
+  await FirebaseFirestore.instance
+      .collection('doctors')
+      .where('speciality', isEqualTo: speciality)
+      .where('hourlyFee', isGreaterThanOrEqualTo: min)
+      .where('hourlyFee', isLessThanOrEqualTo: max)
+      .get()
+      .then((QuerySnapshot querySnapshot) {
+    for (var doc in querySnapshot.docs) {
+      doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
+    }
+  });
+  return doctors;
+}
 
-  //get all doctors of a city with fee in range
-  static Future<List<Doctor>> getAllDoctorsOfCityWithFeeBetween(
-      String city, int min, int max) async {
-    List<Doctor> doctors = [];
-    await FirebaseFirestore.instance
-        .collection('doctors')
-        .where('city', isEqualTo: city)
-        .where('hourlyFee', isGreaterThanOrEqualTo: min)
-        .where('hourlyFee', isLessThanOrEqualTo: max)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      for (var doc in querySnapshot.docs) {
-        doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
-      }
-    });
-    return doctors;
-  }
+//get list of all doctors with speciality and fee in range
+Future<List<Doctor>> getAllDoctorsWithFeeLessThanAndSpecialityBetween(
+    int amount, String minSpeciality, String maxSpeciality) async {
+  List<Doctor> doctors = [];
+  await FirebaseFirestore.instance
+      .collection('doctors')
+      .where('hourlyFee', isLessThan: amount)
+      .where('speciality', isGreaterThanOrEqualTo: minSpeciality)
+      .where('speciality', isLessThanOrEqualTo: maxSpeciality)
+      .get()
+      .then((QuerySnapshot querySnapshot) {
+    for (var doc in querySnapshot.docs) {
+      doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
+    }
+  });
+  return doctors;
+}
+
+//get list of all doctors with speciality and fee in range
+Future<List<Doctor>> getAllDoctorsWithFeeGreaterThanAndSpecialityBetween(
+    int amount, String minSpeciality, String maxSpeciality) async {
+  List<Doctor> doctors = [];
+  await FirebaseFirestore.instance
+      .collection('doctors')
+      .where('hourlyFee', isGreaterThan: amount)
+      .where('speciality', isGreaterThanOrEqualTo: minSpeciality)
+      .where('speciality', isLessThanOrEqualTo: maxSpeciality)
+      .get()
+      .then((QuerySnapshot querySnapshot) {
+    for (var doc in querySnapshot.docs) {
+      doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
+    }
+  });
+  return doctors;
+}
+
+//get all doctors of a city
+Future<List<Doctor>> getAllDoctorsOfCity(String city) async {
+  List<Doctor> doctors = [];
+  await FirebaseFirestore.instance
+      .collection('doctors')
+      .where('city', isEqualTo: city)
+      .get()
+      .then((QuerySnapshot querySnapshot) {
+    for (var doc in querySnapshot.docs) {
+      doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
+    }
+  });
+  return doctors;
+}
+
+//get all doctors of a city with fee less than
+Future<List<Doctor>> getAllDoctorsOfCityWithFeeLessThan(
+    String city, int amount) async {
+  List<Doctor> doctors = [];
+  await FirebaseFirestore.instance
+      .collection('doctors')
+      .where('city', isEqualTo: city)
+      .where('hourlyFee', isLessThan: amount)
+      .get()
+      .then((QuerySnapshot querySnapshot) {
+    for (var doc in querySnapshot.docs) {
+      doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
+    }
+  });
+  return doctors;
+}
+
+//get all doctors of a city with fee greater than
+Future<List<Doctor>> getAllDoctorsOfCityWithFeeGreaterThan(
+    String city, int amount) async {
+  List<Doctor> doctors = [];
+  await FirebaseFirestore.instance
+      .collection('doctors')
+      .where('city', isEqualTo: city)
+      .where('hourlyFee', isGreaterThan: amount)
+      .get()
+      .then((QuerySnapshot querySnapshot) {
+    for (var doc in querySnapshot.docs) {
+      doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
+    }
+  });
+  return doctors;
+}
+
+//get all doctors of a city with fee in range
+Future<List<Doctor>> getAllDoctorsOfCityWithFeeBetween(
+    String city, int min, int max) async {
+  List<Doctor> doctors = [];
+  await FirebaseFirestore.instance
+      .collection('doctors')
+      .where('city', isEqualTo: city)
+      .where('hourlyFee', isGreaterThanOrEqualTo: min)
+      .where('hourlyFee', isLessThanOrEqualTo: max)
+      .get()
+      .then((QuerySnapshot querySnapshot) {
+    for (var doc in querySnapshot.docs) {
+      doctors.add(Doctor.fromMap(doc.data() as Map<String, dynamic>));
+    }
+  });
+  return doctors;
+}
 
 //   //get doctor reviews
-//   static Future<List<Review>> getDoctorReviews(String doctorId) async {
+//   Future<List<Review>> getDoctorReviews(String doctorId) async {
 //     List<Review> reviews = [];
 //     await FirebaseFirestore.instance
 //         .collection('doctors')
@@ -472,4 +497,3 @@ class Doctor {
 //     });
 //     return reviews;
 //   }
-}
