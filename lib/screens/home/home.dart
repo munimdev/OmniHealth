@@ -105,11 +105,18 @@ class _Home extends State<Home> {
                     children: [
                       SizedBox(width: 10),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) {
+                              return TestResults();
+                            }),
+                          );
+                        },
                         child: const DashboardWidgetHorizontal(
-                          title: 'Diagnosis\nDetails',
+                          title: 'Test\nResults',
                           icon: Icon(
-                            Icons.vaccines,
+                            Icons.timeline,
                             color: Colors.white,
                           ),
                         ),
@@ -134,23 +141,6 @@ class _Home extends State<Home> {
                         ),
                       ),
                     ],
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) {
-                          return TestResults();
-                        }),
-                      );
-                    },
-                    child: const DashboardWidgetVertical(
-                      title: 'Test Results',
-                      icon: Icon(
-                        Icons.timeline,
-                        color: Colors.white,
-                      ),
-                    ),
                   ),
                   TextButton(
                     onPressed: () {},
